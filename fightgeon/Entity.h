@@ -68,31 +68,31 @@ public:
 	virtual ~Entity() {};
 };
 
-class car : public Entity
-{
-public:
-	car()
-	{
-		m_name = "car";
-	}
-
-	void update();
-};
-
-
-class asteroid : public Entity
-{
-public:
-	asteroid()
-	{
-		m_velocity.m_x = rand() % 8 - 4;
-		m_velocity.m_y = rand() % 8 - 4;
-		m_name = "asteroid";
-	}
-
-	void  update();
-
-};
+//class car : public Entity
+//{
+//public:
+//	car()
+//	{
+//		m_name = "car";
+//	}
+//
+//	void update();
+//};
+//
+//
+//class asteroid : public Entity
+//{
+//public:
+//	asteroid()
+//	{
+//		m_velocity.m_x = rand() % 8 - 4;
+//		m_velocity.m_y = rand() % 8 - 4;
+//		m_name = "asteroid";
+//	}
+//
+//	void  update();
+//
+//};
 
 class bullet : public Entity
 {

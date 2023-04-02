@@ -133,6 +133,7 @@
     <ClCompile Include="AssetsManager.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="InputHandler.cpp" />
+    <ClCompile Include="Layer.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="Vector2D.cpp" />
@@ -143,6 +144,7 @@
     <ClInclude Include="game.h" />
     <ClInclude Include="InputHandler.h" />
     <ClInclude Include="json.hpp" />
+    <ClInclude Include="Layer.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="Vector2D.h" />
   </ItemGroup>

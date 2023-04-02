@@ -1,0 +1,44 @@
+{
+    "fnt": {
+        "font04": "04B_03__.TTF",
+	"fontad": "ADDSBP__.TTF",
+	"fontar": "arial.ttf"
+    },
+    "img": {
+        "door_locked": "tiles/spr_tile_door_locked.png",
+        "door_unlocked": "tiles/spr_tile_door_unlocked.png",
+        "floor": "tiles/spr_tile_floor.png",
+        "floor_alt": "tiles/spr_tile_floor_alt.png",
+        "wall_bottom_end": "tiles/spr_tile_wall_bottom_end.png",
+        "wall_bottom_left": "tiles/spr_tile_wall_bottom_left.png",
+        "wall_bottom_right": "tiles/spr_tile_wall_bottom_right.png",
+	"wall_bottom_t": "tiles/spr_tile_wall_bottom_t.png",
+	"wall_entrance": "tiles/spr_tile_wall_entrance.png",
+	"wall_intersection": "tiles/spr_tile_wall_intersection.png",
+	"wall_side": "tiles/spr_tile_wall_side.png",
+	"wall_side_left_end": "tiles/spr_tile_wall_side_left_end.png",
+	"wall_side_left_t": "tiles/spr_tile_wall_side_left_t.png",
+	"wall_side_right_end": "tiles/spr_tile_wall_side_right_end.png",
+	"wall_side_right_t": "tiles/spr_tile_wall_side_right_t.png",
+	"wall_single": "tiles/spr_tile_wall_single.png",
+	"wall_top": "tiles/spr_tile_wall_top.png",
+	"wall_top_end": "tiles/spr_tile_wall_top_end.png",
+	"wall_top_left": "tiles/spr_tile_wall_top_left.png",
+	"wall_top_right": "tiles/spr_tile_wall_top_right.png",
+	"wall_top_t": "tiles/spr_tile_wall_top_t.png"
+    },
+    "mus": {
+        "music1": "msc_main_track_1.wav",
+	"music2": "msc_main_track_2.wav",
+	"music3": "msc_main_track_3.wav",
+	"music4": "msc_main_track_4.wav"
+    },
+    "snd": {
+        "coin_pickup": "snd_coin_pickup.wav",
+        "enemy_dead": "snd_enemy_dead.wav",
+        "fire": "snd_fire.wav",
+        "gem_pickup": "snd_gem_pickup.wav",
+        "key_pickup": "snd_key_pickup.wav",
+        "player_hit": "snd_player_hit.wav"
+    }
+}

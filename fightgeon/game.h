@@ -6,7 +6,6 @@
 #include "AssetsManager.h"
 #include "InputHandler.h"
 #include "Entity.h"
-#include "Level.h"
 
 ////Game States
 enum GAMESTATES { MENU, LOAD_LEVEL, GAME, END_GAME };
@@ -50,7 +49,6 @@ private:
 	SDL_Renderer* m_pRenderer;
 
 	player *p;
-	car *c1, *c2, *c3, *c4;
 	int state = -1;
 	std::vector<int> vhiscores;
 	int lives, score;

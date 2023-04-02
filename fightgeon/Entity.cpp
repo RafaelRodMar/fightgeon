@@ -17,18 +17,18 @@ void Entity::draw()
 		m_currentRow, m_currentFrame, Game::Instance()->getRenderer(), m_angle, m_alpha, SDL_FLIP_NONE);
 }
 
-void  asteroid::update()
-{
-	m_position.m_x += m_velocity.m_x;
-	m_position.m_y += m_velocity.m_y;
-
-	if (m_position.m_x > Game::Instance()->getGameWidth()) m_position.m_x = 0;
-	if (m_position.m_x < 0) m_position.m_x = Game::Instance()->getGameWidth();
-	if (m_position.m_y > Game::Instance()->getGameHeight()) m_position.m_y = 0;
-	if (m_position.m_y < 0) m_position.m_y = Game::Instance()->getGameHeight();
-
-	m_currentFrame = int(((SDL_GetTicks() / (100)) % m_numFrames));
-}
+//void  asteroid::update()
+//{
+//	m_position.m_x += m_velocity.m_x;
+//	m_position.m_y += m_velocity.m_y;
+//
+//	if (m_position.m_x > Game::Instance()->getGameWidth()) m_position.m_x = 0;
+//	if (m_position.m_x < 0) m_position.m_x = Game::Instance()->getGameWidth();
+//	if (m_position.m_y > Game::Instance()->getGameHeight()) m_position.m_y = 0;
+//	if (m_position.m_y < 0) m_position.m_y = Game::Instance()->getGameHeight();
+//
+//	m_currentFrame = int(((SDL_GetTicks() / (100)) % m_numFrames));
+//}
 
 void bullet::update()
 {
@@ -72,17 +72,17 @@ void player::draw()
 	}
 }
 
-void car::update()
-{
-	m_position.m_y += m_velocity.m_y;
-
-	if (m_position.m_y < 0)
-	{
-		m_position.m_y = Game::Instance()->getGameHeight();
-	}
-	else
-	{
-		if (m_position.m_y > Game::Instance()->getGameHeight())
-			m_position.m_y = 0;
-	}
-}
+//void car::update()
+//{
+//	m_position.m_y += m_velocity.m_y;
+//
+//	if (m_position.m_y < 0)
+//	{
+//		m_position.m_y = Game::Instance()->getGameHeight();
+//	}
+//	else
+//	{
+//		if (m_position.m_y > Game::Instance()->getGameHeight())
+//			m_position.m_y = 0;
+//	}
+//}
