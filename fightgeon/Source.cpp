@@ -109,7 +109,71 @@ bool Game::init(const char* title, int xpos, int ypos, int width,
 	AssetsManager::Instance()->loadAssetsJson(); //ahora con formato json
 	Mix_Volume(-1, 16); //adjust sound/music volume for all channels
 
-	//ReadHiScores();
+	ReadHiScores();
+
+	//read level data from file
+	std::ifstream in("assets/data/level_data.txt");
+	if (in.good())
+	{
+		std::string str;
+		int row = 0;
+		while (std::getline(in, str))
+		{
+			std::stringstream ss(str);
+			int data;
+			for (int i = 0; i < 19; i++) {
+				ss >> data;
+				level[row][i] = data;
+			}
+			row++;
+		}
+		in.close();
+	}
+	else
+	{
+		std::cout << "Error loading level data" << std::endl;
+	}
+
+	//no change, red, green, blue, yellow, magenta, cyan
+	SDL_Color colorList[7] = { {255,255,255}, {255,0,0}, {0,255,0}, {0,0,255}, {255,253,1}, {236,5,229}, {0,255,255} };
+	colorMod = colorList[rnd.getRndInt(0, 6)];
+	//modify the color of the tiles
+	for (int i = 0; i < 22; i++) {
+		AssetsManager::Instance()->applyColorMod(numToTile[i], colorMod.r, colorMod.g, colorMod.b);
+	}
+
+	//now there is a map loaded from a file. Let´s create a randomized map
+
+	//first create a grid of nodes (all walls, the nodes are empty)
+	//the nodes are the ones with row and col are odd
+	for (int i = 0; i < 19; i++) {
+		for (int j = 0; j < 19; j++) {
+			if ((i % 2 != 0) && (j % 2 != 0))
+			{
+				level[i][j] = 21; //empty cell
+			}
+			else
+			{
+				level[i][j] = 10; //wall_top
+			}
+		}
+	}
+
+	//now carve passages between nodes.
+	//1- choose a random direction and make a connection to the adjacent node if it
+	//has not yet been visited. This node becomes the current node.
+	//2- if all adjacent cells in each direction have already been visited, go back to 
+	//the last cell.
+	//3- if you're back at the start node, the algorithm is complete.
+	createPath(1, 1);
+
+	//add some rooms to the level to create some open space.
+	createRooms(10);
+
+	//give each tile the correct texture
+	calculateTextures();
+
+	populateLevel();
 
 	state = GAME;
 
@@ -127,6 +191,14 @@ void Game::render()
 
 	if (state == GAME)
 	{
+		for (int i = 0; i < 19; i++) {
+			for (int j = 0; j < 19; j++) {
+				AssetsManager::Instance()->draw(numToTile[level[i][j]], j * 50, i * 50, 50, 50, Game::Instance()->getRenderer());
+			}
+		}
+
+		for (auto i : entities)
+			i->draw();
 	}
 
 	if (state == END_GAME)
@@ -143,7 +215,7 @@ void Game::quit()
 
 void Game::clean()
 {
-	//WriteHiScores();
+	WriteHiScores();
 	std::cout << "cleaning game\n";
 	InputHandler::Instance()->clean();
 	AssetsManager::Instance()->clearFonts();
@@ -204,6 +276,137 @@ void Game::update()
 		}
 	}
 
+}
+
+void Game::populateLevel()
+{
+
+}
+
+//carve paths recursively to create a maze
+void Game::createPath(int columnIndex, int rowIndex) {
+	//store the current tile
+	int currentTileCol = columnIndex;
+	int currentTileRow = rowIndex;
+	//cout << "Tile: " << currentTileCol << "," << currentTileRow << endl;
+
+	//create a list of possible directions and sort randomly
+	vector< vector<int> > directions = { {0,-2}, {2,0}, {0,2}, {-2,0} };
+	//cout << "tile: " << currentTileCol << "," << currentTileRow << " dir: " << directions[0][0] << "," << directions[0][1] << endl;
+	random_shuffle(begin(directions), end(directions));
+	//cout << "tile: " << currentTileCol << "," << currentTileRow << " dir: " << directions[0][0] << "," << directions[0][1] << endl;
+
+	//for each direction
+	for (int i = 0; i < 4; i++) {
+		//cout << "dir: " << i << " ";
+		//get the new tile position
+		int dx = currentTileCol + directions[i][0];
+		int dy = currentTileRow + directions[i][1];
+
+		//if the tile is valid
+		if (dx >= 0 && dy >= 0 && dx < 19 && dy < 19)
+		{
+			//cout << "is valid" << endl;
+			//store the tile
+			int tileCol = dx;
+			int tileRow = dy;
+
+			//if the tile has not yet been visited
+			if (level[dy][dx] == 21)
+			{
+				//mark the tile as floor
+				level[dy][dx] = 19;
+				//cout << "mark the tile as floor" << endl;
+
+				//knock the wall down
+				int ddx = currentTileCol + (directions[i][0] / 2);
+				int ddy = currentTileRow + (directions[i][1] / 2);
+
+				level[ddy][ddx] = 19;
+
+				//recursively call the function with the new tile
+				createPath(dx, dy);
+			}
+		}
+	}
+
+}
+
+//choose random places and convert tiles to floor
+void Game::createRooms(int roomCount) {
+	for (int i = 0; i < roomCount; i++) {
+		//generate a room size
+		int roomWidth = rnd.getRndInt(1, 2);
+		int roomHeight = rnd.getRndInt(1, 2);
+
+		//choose a random starting location
+		int startI = rnd.getRndInt(1, 17);
+		int startY = rnd.getRndInt(1, 17);
+
+		for (int j = -1; j < roomWidth; ++j) {
+			for (int z = -1; z < roomHeight; ++z) {
+				int newI = startI + j;
+				int newY = startY + z;
+
+				//check if the tile is valid
+				if (newI > 0 && newY > 0 && newI < 18 && newY < 18)
+				{
+					level[newI][newY] = 19;
+				}
+			}
+		}
+	}
+}
+
+//calculates the correct texture for each tile in the level
+void Game::calculateTextures() {
+	for (int i = 0; i < 19; i++) {
+		for (int j = 0; j < 19; j++) {
+			std::cout << level[i][j] << " ";
+		}
+		std::cout << std::endl;
+	}
+	//for each tile in the grid
+	for (int i = 0; i < 19; ++i) {
+		for (int j = 0; j < 19; ++j) {
+			//check if the tile is a wall block
+			if ((level[i][j] >= 0 && level[i][j] <= 15) || level[i][j] == 18)
+			{
+				//calculate bit mask
+				int value = 0;
+
+				//store the current type as default
+				int type = level[i][j];
+
+				//top
+				if ((level[i - 1][j] >= 0 && level[i - 1][j] <= 15) || level[i - 1][j] == 18)
+				{
+					value += 1;
+				}
+
+				//right
+				if ((level[i][j + 1] >= 0 && level[i][j + 1] <= 15) || level[i][j + 1] == 18)
+				{
+					value += 2;
+				}
+
+				//bottom
+				if ((level[i + 1][j] >= 0 && level[i + 1][j] <= 15) || level[i + 1][j] == 18)
+				{
+					value += 4;
+				}
+
+				//left
+				if ((level[i][j - 1] >= 0 && level[i][j - 1] <= 15) || level[i][j - 1] == 18)
+				{
+					value += 8;
+				}
+
+				//set the new type
+				level[i][j] = value;
+			}
+		}
+	}
 }
 
 void Game::UpdateHiScores(int newscore)

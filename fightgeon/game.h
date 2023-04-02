@@ -60,6 +60,12 @@ private:
 	void createRooms(int roomCount);
 	void calculateTextures();
 
+	std::string numToTile[22] = { "wall_single", "wall_top_end", "wall_side_right_end", "wall_bottom_left", "wall_bottom_end",
+						 "wall_side", "wall_top_left", "wall_side_left_t", "wall_side_left_end", "wall_bottom_right", "wall_top",
+						 "wall_bottom_t", "wall_top_right", "wall_side_right_t", "wall_top_t", "wall_intersection",
+						 "door_locked", "door_unlocked", "wall_entrance", "floor", "floor_alt", "empty" };
+
+
 	std::list<Entity*> entities;
 	bool isCollide(Entity *a, Entity *b);
 	bool isCollideRect(Entity *a, Entity *b);
