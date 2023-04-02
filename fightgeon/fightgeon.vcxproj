@@ -130,7 +130,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AssetsManager.cpp" />
+    <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="InputHandler.cpp" />
+    <ClCompile Include="Level.cpp" />
     <ClCompile Include="Source.cpp" />
+    <ClCompile Include="Vector2D.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AssetsManager.h" />
+    <ClInclude Include="Entity.h" />
+    <ClInclude Include="game.h" />
+    <ClInclude Include="InputHandler.h" />
+    <ClInclude Include="json.hpp" />
+    <ClInclude Include="Level.h" />
+    <ClInclude Include="Vector2D.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
