@@ -175,6 +175,19 @@ bool Game::init(const char* title, int xpos, int ypos, int width,
 
 	populateLevel();
 
+	//create a gem (it goes into populatelevel() function)
+	std::unique_ptr<Gem> gem = std::make_unique<Gem>();
+	//set the gem position
+	gem->m_position = Vector2D(5, 5);
+	gem->m_textureID = "gem";
+	gem->m_width = 168 / 8;
+	gem->m_height = 25;
+	gem->m_numFrames = 8;
+	gem->m_currentRow = 0;
+	gem->m_currentFrame = 0;
+	//add the gem to the collection of all objects. (need to use std::move for unique_ptr)
+	m_items.push_back(std::move(gem));
+
 	state = GAME;
 
 	return true;
@@ -197,8 +210,12 @@ void Game::render()
 			}
 		}
 
-		for (auto i : entities)
+		for (auto& i : entities)
 			i->draw();
+
+		for (auto& i : m_items)
+			i->draw();
+			
 	}
 
 	if (state == END_GAME)
@@ -274,6 +291,9 @@ void Game::update()
 
 			e->update();
 		}
+
+		for (auto& i : m_items)
+			i->update();
 	}
 
 }

@@ -25,7 +25,20 @@
 	"wall_top_end": "tiles/spr_tile_wall_top_end.png",
 	"wall_top_left": "tiles/spr_tile_wall_top_left.png",
 	"wall_top_right": "tiles/spr_tile_wall_top_right.png",
-	"wall_top_t": "tiles/spr_tile_wall_top_t.png"
+	"wall_top_t": "tiles/spr_tile_wall_top_t.png",
+	"gem": "loot/gem/spr_pickup_gem.png",
+	"gold_small" : "loot/gold/spr_pickup_gold_small.png",
+	"gold_medium" : "loot/gold/spr_pickup_gold_medium.png",
+	"gold_large" : "loot/gold/spr_pickup_gold_large.png",
+	"heart" : "loot/heart/spr_pickup_heart.png",
+	"key" : "loot/key/spr_pickup_key.png",
+	"potion_attack" : "loot/potions/spr_potion_attack.png",
+	"potion_defense" : "loot/potions/spr_potion_defense.png",
+	"potion_dexterity" : "loot/potions/spr_potion_dexterity.png",
+	"potion_health" : "loot/potions/spr_potion_health.png",
+	"potion_mana" : "loot/potions/spr_potion_mana.png",
+	"potion_stamina" : "loot/potions/spr_potion_stamina.png",
+	"potion_strength" : "loot/potions/spr_potion_strength.png"
     },
     "mus": {
         "music1": "msc_main_track_1.wav",

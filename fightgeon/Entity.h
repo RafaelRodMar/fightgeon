@@ -121,3 +121,14 @@ public:
 
 };
 
+class Gem : public Entity {
+public:
+
+	Gem() {
+		m_name = "item";
+	}
+
+	void update();
+	void draw();
+};
+

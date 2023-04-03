@@ -108,7 +108,7 @@ private:
 	bool isCollide(Entity *a, Entity *b);
 	bool isCollideRect(Entity *a, Entity *b);
 	//std::vector<GameObject*> m_gameObjects;
-	//std::vector<std::unique_ptr<Item>> m_items;
+	std::vector<std::unique_ptr<Entity>> m_items;
 	//std::vector<std::unique_ptr<Enemy>> m_enemies;
 
 	bool m_bRunning;
