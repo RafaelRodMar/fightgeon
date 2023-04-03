@@ -10,6 +10,44 @@
 ////Game States
 enum GAMESTATES { MENU, LOAD_LEVEL, GAME, END_GAME };
 
+// Tiles.
+enum class TILE {
+	WALL_SINGLE,
+	WALL_TOP_END,
+	WALL_SIDE_RIGHT_END,
+	WALL_BOTTOM_LEFT,
+	WALL_BOTTOM_END,
+	WALL_SIDE,
+	WALL_TOP_LEFT,
+	WALL_SIDE_LEFT_T,
+	WALL_SIDE_LEFT_END,
+	WALL_BOTTOM_RIGHT,
+	WALL_TOP,
+	WALL_BOTTOM_T,
+	WALL_TOP_RIGHT,
+	WALL_SIDE_RIGHT_T,
+	WALL_TOP_T,
+	WALL_INTERSECTION,
+	WALL_DOOR_LOCKED,
+	WALL_DOOR_UNLOCKED,
+	WALL_ENTRANCE,
+	FLOOR,
+	FLOOR_ALT,
+	EMPTY,
+	COUNT
+};
+
+struct Tile {
+	TILE type;
+	int columnIndex;
+	int rowIndex;
+	SDL_Texture* texture;
+	int H; //heuristic/movement cost to goal.
+	int G; //movement cost. (total of entire path).
+	int F; //estimated cost for full path. (G+H).
+	Tile* parentNode; //node to reach this node.
+};
+
 class Game {
 public:
 	static Game* Instance()
@@ -70,6 +108,8 @@ private:
 	bool isCollide(Entity *a, Entity *b);
 	bool isCollideRect(Entity *a, Entity *b);
 	//std::vector<GameObject*> m_gameObjects;
+	//std::vector<std::unique_ptr<Item>> m_items;
+	//std::vector<std::unique_ptr<Enemy>> m_enemies;
 
 	bool m_bRunning;
 	int m_gameWidth;
