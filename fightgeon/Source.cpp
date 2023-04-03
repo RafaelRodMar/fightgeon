@@ -175,19 +175,6 @@ bool Game::init(const char* title, int xpos, int ypos, int width,
 
 	populateLevel();
 
-	//create a gem (it goes into populatelevel() function)
-	std::unique_ptr<Gem> gem = std::make_unique<Gem>();
-	//set the gem position
-	gem->m_position = Vector2D(5, 5);
-	gem->m_textureID = "gem";
-	gem->m_width = 168 / 8;
-	gem->m_height = 25;
-	gem->m_numFrames = 8;
-	gem->m_currentRow = 0;
-	gem->m_currentFrame = 0;
-	//add the gem to the collection of all objects. (need to use std::move for unique_ptr)
-	m_items.push_back(std::move(gem));
-
 	state = GAME;
 
 	return true;
@@ -300,7 +287,26 @@ void Game::update()
 
 void Game::populateLevel()
 {
+	std::vector<Vector2D> floorTiles;
+	for (int i = 0; i < 19; i++) {
+		for (int j = 0; j < 19; j++) {
+			if (isFloor(Vector2D(i, j))) floorTiles.push_back(Vector2D(i, j));
+		}
+	}
 
+	//create a gem (it goes into populatelevel() function)
+	std::unique_ptr<Gem> gem = std::make_unique<Gem>();
+	//set the gem position
+	gem->m_position = floorTiles[rand() % floorTiles.size()] * 50;
+	//std::cout << gem->m_position.m_x << "," << gem->m_position.m_y << std::endl;
+	gem->m_textureID = "gem";
+	gem->m_width = 168 / 8;
+	gem->m_height = 25;
+	gem->m_numFrames = 8;
+	gem->m_currentRow = 0;
+	gem->m_currentFrame = 0;
+	//add the gem to the collection of all objects. (need to use std::move for unique_ptr)
+	m_items.push_back(std::move(gem));
 }
 
 //carve paths recursively to create a maze
@@ -380,12 +386,12 @@ void Game::createRooms(int roomCount) {
 
 //calculates the correct texture for each tile in the level
 void Game::calculateTextures() {
-	for (int i = 0; i < 19; i++) {
+	/*for (int i = 0; i < 19; i++) {
 		for (int j = 0; j < 19; j++) {
 			std::cout << level[i][j] << " ";
 		}
 		std::cout << std::endl;
-	}
+	}*/
 	//for each tile in the grid
 	for (int i = 0; i < 19; ++i) {
 		for (int j = 0; j < 19; ++j) {

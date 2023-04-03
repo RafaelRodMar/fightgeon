@@ -97,6 +97,11 @@ private:
 	void createPath(int columnIndex, int rowIndex);
 	void createRooms(int roomCount);
 	void calculateTextures();
+	bool isFloor(Vector2D v) {
+		if (level[(int)v.m_x][(int)v.m_y] == 19) return true;
+		if (level[(int)v.m_x][(int)v.m_y] == 20) return true;
+		return false;
+	}
 
 	std::string numToTile[22] = { "wall_single", "wall_top_end", "wall_side_right_end", "wall_bottom_left", "wall_bottom_end",
 						 "wall_side", "wall_top_left", "wall_side_left_t", "wall_side_left_end", "wall_bottom_right", "wall_top",
