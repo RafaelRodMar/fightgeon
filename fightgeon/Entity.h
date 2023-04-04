@@ -117,6 +117,7 @@ public:
 	}
 
 	void update();
+	void handleEvents();
 	void draw();
 
 };

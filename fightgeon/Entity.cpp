@@ -60,16 +60,14 @@ void player::update()
 	if (m_position.m_y < 0) m_position.m_y = 0;
 }
 
+void player::handleEvents()
+{
+}
+
 void player::draw()
 {
 	AssetsManager::Instance()->drawFrame(m_textureID, m_position.m_x, m_position.m_y, m_width, m_height, 
 		m_currentRow, m_currentFrame, Game::Instance()->getRenderer(), m_angle, m_alpha, SDL_FLIP_NONE);
-
-	if (m_shield)
-	{
-		AssetsManager::Instance()->drawFrame("shield", m_position.m_x, m_position.m_y, 40, 40, 0, 0, 
-			Game::Instance()->getRenderer(), 0, m_alpha / 2, SDL_FLIP_NONE);
-	}
 }
 
 //void car::update()
