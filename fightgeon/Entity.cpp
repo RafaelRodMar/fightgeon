@@ -97,3 +97,47 @@ void Gem::draw()
 	AssetsManager::Instance()->drawFrame(m_textureID, m_position.m_x, m_position.m_y, m_width, m_height,
 		m_currentRow, m_currentFrame, Game::Instance()->getRenderer(), m_angle, m_alpha, SDL_FLIP_NONE);
 }
+
+void Key::update()
+{
+	m_currentFrame = int(((SDL_GetTicks() / (100)) % m_numFrames));
+}
+
+void Key::draw()
+{
+	AssetsManager::Instance()->drawFrame(m_textureID, m_position.m_x, m_position.m_y, m_width, m_height,
+		m_currentRow, m_currentFrame, Game::Instance()->getRenderer(), m_angle, m_alpha, SDL_FLIP_NONE);
+}
+
+void Gold::update()
+{
+	m_currentFrame = int(((SDL_GetTicks() / (100)) % m_numFrames));
+}
+
+void Gold::draw()
+{
+	AssetsManager::Instance()->drawFrame(m_textureID, m_position.m_x, m_position.m_y, m_width, m_height,
+		m_currentRow, m_currentFrame, Game::Instance()->getRenderer(), m_angle, m_alpha, SDL_FLIP_NONE);
+}
+
+void Heart::update()
+{
+	m_currentFrame = int(((SDL_GetTicks() / (100)) % m_numFrames));
+}
+
+void Heart::draw()
+{
+	AssetsManager::Instance()->drawFrame(m_textureID, m_position.m_x, m_position.m_y, m_width, m_height,
+		m_currentRow, m_currentFrame, Game::Instance()->getRenderer(), m_angle, m_alpha, SDL_FLIP_NONE);
+}
+
+void Potion::update()
+{
+	m_currentFrame = int(((SDL_GetTicks() / (100)) % m_numFrames));
+}
+
+void Potion::draw()
+{
+	AssetsManager::Instance()->drawFrame(m_textureID, m_position.m_x, m_position.m_y, m_width, m_height,
+		m_currentRow, m_currentFrame, Game::Instance()->getRenderer(), m_angle, m_alpha, SDL_FLIP_NONE);
+}

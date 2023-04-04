@@ -297,19 +297,66 @@ void Game::populateLevel()
 		}
 	}
 
-	//create a gem (it goes into populatelevel() function)
+	//create a gem
 	std::unique_ptr<Gem> gem = std::make_unique<Gem>();
-	//set the gem position
-	gem->m_position = floorTiles[rand() % floorTiles.size()] * 50;
-	//std::cout << gem->m_position.m_x << "," << gem->m_position.m_y << std::endl;
-	gem->m_textureID = "gem";
-	gem->m_width = 168 / 8;
-	gem->m_height = 25;
-	gem->m_numFrames = 8;
-	gem->m_currentRow = 0;
-	gem->m_currentFrame = 0;
+
+	//set the gem settings
+	int r = rand() % floorTiles.size();
+	gem->settings("gem", floorTiles[r] * 50, Vector2D(0, 0), 168 / 8, 25, 8, 0, 0, 0.0, 1);
+
 	//add the gem to the collection of all objects. (need to use std::move for unique_ptr)
 	m_items.push_back(std::move(gem));
+
+	floorTiles.erase(floorTiles.begin(), floorTiles.begin() + r); //so it can't be used again
+
+	//create a key
+	std::unique_ptr<Key> key = std::make_unique<Key>();
+	r = rand() % floorTiles.size();
+	key->settings("key", floorTiles[r] * 50, Vector2D(0, 0), 240 / 8, 24, 8, 0, 0, 0.0, 1);
+	m_items.push_back(std::move(key));
+	floorTiles.erase(floorTiles.begin(), floorTiles.begin() + r);
+
+	//create gold small
+	std::unique_ptr<Gold> gold = std::make_unique<Gold>();
+	r = rand() % floorTiles.size();
+	gold->settings("gold_small", floorTiles[r] * 50, Vector2D(0, 0), 96 / 8, 16, 8, 0, 0, 0.0, 1);
+	gold->amount = 20;
+	m_items.push_back(std::move(gold));
+	floorTiles.erase(floorTiles.begin(), floorTiles.begin() + r);
+
+	//create gold medium
+	std::unique_ptr<Gold> goldmed = std::make_unique<Gold>();
+	r = rand() % floorTiles.size();
+	goldmed->settings("gold_medium", floorTiles[r] * 50, Vector2D(0, 0), 144 / 8, 19, 8, 0, 0, 0.0, 1);
+	goldmed->amount = 120;
+	m_items.push_back(std::move(goldmed));
+	floorTiles.erase(floorTiles.begin(), floorTiles.begin() + r);
+
+	//create gold large
+	std::unique_ptr<Gold> goldlarge = std::make_unique<Gold>();
+	r = rand() % floorTiles.size();
+	goldlarge->settings("gold_large", floorTiles[r] * 50, Vector2D(0, 0), 192 / 8, 19, 8, 0, 0, 0.0, 1);
+	goldlarge->amount = 220;
+	m_items.push_back(std::move(goldlarge));
+	floorTiles.erase(floorTiles.begin(), floorTiles.begin() + r);
+
+	//create heart
+	std::unique_ptr<Heart> heart = std::make_unique<Heart>();
+	r = rand() % floorTiles.size();
+	heart->settings("heart", floorTiles[r] * 50, Vector2D(0, 0), 120 / 8, 22, 8, 0, 0, 0.0, 1);
+	m_items.push_back(std::move(heart));
+	floorTiles.erase(floorTiles.begin(), floorTiles.begin() + r);
+
+	//create 3 potions
+	std::string potionNames[7] = { "potion_attack", "potion_defense", "potion_dexterity", "potion_health", "potion_mana", "potion_stamina", "potion_strength" };
+	for (int i = 0; i < 3; i++) {
+		int pName = rand() % 7;
+		std::unique_ptr<Potion> potion = std::make_unique<Potion>();
+		r = rand() % floorTiles.size();
+		potion->settings(potionNames[pName], floorTiles[r] * 50, Vector2D(0, 0), 120 / 8, 30, 8, 0, 0, 0.0, 1);
+		m_items.push_back(std::move(potion));
+		floorTiles.erase(floorTiles.begin(), floorTiles.begin() + r);
+	}
 }
 
 //carve paths recursively to create a maze
