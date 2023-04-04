@@ -288,9 +288,12 @@ void Game::update()
 void Game::populateLevel()
 {
 	std::vector<Vector2D> floorTiles;
-	for (int i = 0; i < 19; i++) {
-		for (int j = 0; j < 19; j++) {
-			if (isFloor(Vector2D(i, j))) floorTiles.push_back(Vector2D(i, j));
+	for (int j = 0; j < 19; j++) {
+		for (int i = 0; i < 19; i++) {
+			if (isFloor(Vector2D(i, j)))
+			{
+				floorTiles.push_back(Vector2D(j, i)); //inverted
+			}
 		}
 	}
 
