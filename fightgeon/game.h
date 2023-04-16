@@ -94,6 +94,8 @@ private:
 	SDL_Color colorMod;
 	int level[19][19];
 	void populateLevel();
+	int m_tileWidth = 50;
+	int m_tileHeight = 50;
 	void createPath(int columnIndex, int rowIndex);
 	void createRooms(int roomCount);
 	void calculateTextures();

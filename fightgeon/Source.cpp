@@ -175,6 +175,10 @@ bool Game::init(const char* title, int xpos, int ypos, int width,
 
 	populateLevel();
 
+	p = new player();
+	p->settings("warrior_idle_down", Vector2D(50,50), Vector2D(0, 0), 33, 33, 1, 0, 0, 0.0, 1);
+	p->m_position += Vector2D(m_tileWidth / 2 - p->m_width / 2, m_tileHeight / 2 - p->m_height / 2);
+
 	state = GAME;
 
 	return true;
@@ -193,7 +197,7 @@ void Game::render()
 	{
 		for (int i = 0; i < 19; i++) {
 			for (int j = 0; j < 19; j++) {
-				AssetsManager::Instance()->draw(numToTile[level[i][j]], j * 50, i * 50, 50, 50, Game::Instance()->getRenderer());
+				AssetsManager::Instance()->draw(numToTile[level[i][j]], j * m_tileWidth, i * m_tileHeight, m_tileWidth, m_tileHeight, Game::Instance()->getRenderer());
 			}
 		}
 
@@ -202,6 +206,8 @@ void Game::render()
 
 		for (auto& i : m_items)
 			i->draw();
+
+		p->draw();
 			
 	}
 
@@ -241,6 +247,7 @@ void Game::handleEvents()
 
 	if (state == GAME)
 	{
+		p->handleEvents();
 	}
 
 	if (state == END_GAME)
@@ -281,6 +288,8 @@ void Game::update()
 
 		for (auto& i : m_items)
 			i->update();
+
+		p->update();
 	}
 
 }
@@ -303,6 +312,8 @@ void Game::populateLevel()
 	//set the gem settings
 	int r = rnd.getRndInt(0, floorTiles.size() - 1);
 	gem->settings("gem", floorTiles[r] * 50, Vector2D(0, 0), 168 / 8, 25, 8, 0, 0, 0.0, 1);
+	//center the position of the item in the tile
+	gem->m_position += Vector2D(m_tileWidth / 2 - gem->m_width / 2, m_tileHeight / 2 - gem->m_height / 2);
 	//add the gem to the collection of all objects. (need to use std::move for unique_ptr)
 	m_items.push_back(std::move(gem));
 
@@ -312,6 +323,7 @@ void Game::populateLevel()
 	std::unique_ptr<Key> key = std::make_unique<Key>();
 	r = rnd.getRndInt(0, floorTiles.size() - 1);
 	key->settings("key", floorTiles[r] * 50, Vector2D(0, 0), 240 / 8, 24, 8, 0, 0, 0.0, 1);
+	key->m_position += Vector2D(m_tileWidth / 2 - key->m_width / 2, m_tileHeight / 2 - key->m_height / 2);
 	m_items.push_back(std::move(key));
 	floorTiles.erase(floorTiles.begin() + r);
 
@@ -319,6 +331,7 @@ void Game::populateLevel()
 	std::unique_ptr<Gold> gold = std::make_unique<Gold>();
 	r = rnd.getRndInt(0, floorTiles.size() - 1);
 	gold->settings("gold_small", floorTiles[r] * 50, Vector2D(0, 0), 96 / 8, 16, 8, 0, 0, 0.0, 1);
+	gold->m_position += Vector2D(m_tileWidth / 2 - gold->m_width / 2, m_tileHeight / 2 - gold->m_height / 2);
 	gold->amount = 20;
 	m_items.push_back(std::move(gold));
 	floorTiles.erase(floorTiles.begin() + r);
@@ -327,6 +340,7 @@ void Game::populateLevel()
 	std::unique_ptr<Gold> goldmed = std::make_unique<Gold>();
 	r = rnd.getRndInt(0, floorTiles.size() - 1);
 	goldmed->settings("gold_medium", floorTiles[r] * 50, Vector2D(0, 0), 144 / 8, 19, 8, 0, 0, 0.0, 1);
+	goldmed->m_position += Vector2D(m_tileWidth / 2 - goldmed->m_width / 2, m_tileHeight / 2 - goldmed->m_height / 2);
 	goldmed->amount = 120;
 	m_items.push_back(std::move(goldmed));
 	floorTiles.erase(floorTiles.begin() + r);
@@ -335,6 +349,7 @@ void Game::populateLevel()
 	std::unique_ptr<Gold> goldlarge = std::make_unique<Gold>();
 	r = rnd.getRndInt(0, floorTiles.size() - 1);
 	goldlarge->settings("gold_large", floorTiles[r] * 50, Vector2D(0, 0), 192 / 8, 19, 8, 0, 0, 0.0, 1);
+	goldlarge->m_position += Vector2D(m_tileWidth / 2 - goldlarge->m_width / 2, m_tileHeight / 2 - goldlarge->m_height / 2);
 	goldlarge->amount = 220;
 	m_items.push_back(std::move(goldlarge));
 	floorTiles.erase(floorTiles.begin() + r);
@@ -343,6 +358,7 @@ void Game::populateLevel()
 	std::unique_ptr<Heart> heart = std::make_unique<Heart>();
 	r = rnd.getRndInt(0, floorTiles.size() - 1);
 	heart->settings("heart", floorTiles[r] * 50, Vector2D(0, 0), 120 / 8, 22, 8, 0, 0, 0.0, 1);
+	heart->m_position += Vector2D(m_tileWidth / 2 - heart->m_width / 2, m_tileHeight / 2 - heart->m_height / 2);
 	m_items.push_back(std::move(heart));
 	floorTiles.erase(floorTiles.begin() + r);
 
@@ -353,6 +369,7 @@ void Game::populateLevel()
 		std::unique_ptr<Potion> potion = std::make_unique<Potion>();
 		r = rnd.getRndInt(0, floorTiles.size() - 1);
 		potion->settings(potionNames[pName], floorTiles[r] * 50, Vector2D(0, 0), 120 / 8, 30, 8, 0, 0, 0.0, 1);
+		potion->m_position += Vector2D(m_tileWidth / 2 - potion->m_width / 2, m_tileHeight / 2 - potion->m_height / 2);
 		m_items.push_back(std::move(potion));
 		floorTiles.erase(floorTiles.begin() + r);
 	}

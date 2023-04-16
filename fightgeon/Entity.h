@@ -62,7 +62,7 @@ public:
 	}
 
 	virtual void update();
-
+	virtual void handleEvents();
 	virtual void draw();
 
 	virtual ~Entity() {};

@@ -38,7 +38,15 @@
 	"potion_health" : "loot/potions/spr_potion_health.png",
 	"potion_mana" : "loot/potions/spr_potion_mana.png",
 	"potion_stamina" : "loot/potions/spr_potion_stamina.png",
-	"potion_strength" : "loot/potions/spr_potion_strength.png"
+	"potion_strength" : "loot/potions/spr_potion_strength.png",
+	"warrior_idle_down" : "players/warrior/spr_warrior_idle_down.png",
+	"warrior_idle_left" : "players/warrior/spr_warrior_idle_left.png",
+	"warrior_idle_right" : "players/warrior/spr_warrior_idle_right.png",
+	"warrior_idle_up" : "players/warrior/spr_warrior_idle_up.png",
+	"warrior_walk_down" : "players/warrior/spr_warrior_walk_down.png",
+	"warrior_walk_left" : "players/warrior/spr_warrior_walk_left.png",
+	"warrior_walk_right" : "players/warrior/spr_warrior_walk_right.png",
+	"warrior_walk_up" : "players/warrior/spr_warrior_walk_up.png"
     },
     "mus": {
         "music1": "msc_main_track_1.wav",

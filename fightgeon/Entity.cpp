@@ -3,6 +3,11 @@
 
 float DEGTORAD = 0.017453f; //pi/180
 
+void Entity::handleEvents()
+{
+
+}
+
 void Entity::update()
 {
 	if (m_name == "explosion")
@@ -54,14 +59,36 @@ void player::update()
 	m_position += m_velocity;
 
 	m_velocity = Vector2D(0, 0);
-	if (m_position.m_x > Game::Instance()->getGameWidth()) m_position.m_x = Game::Instance()->getGameWidth();
+	if (m_position.m_x + m_width >= Game::Instance()->getGameWidth()) m_position.m_x = Game::Instance()->getGameWidth() - m_width;
 	if (m_position.m_x < 0) m_position.m_x = 0;
-	if (m_position.m_y > Game::Instance()->getGameHeight()) m_position.m_y = Game::Instance()->getGameHeight();
+	if (m_position.m_y + m_height >= Game::Instance()->getGameHeight()) m_position.m_y = Game::Instance()->getGameHeight() - m_height;
 	if (m_position.m_y < 0) m_position.m_y = 0;
+
+	m_currentFrame = int(((SDL_GetTicks() / (100)) % m_numFrames));
 }
 
 void player::handleEvents()
 {
+	if (InputHandler::Instance()->isKeyDown(SDL_SCANCODE_W))
+	{
+		m_textureID = "warrior_idle_up";
+		m_velocity.m_y -= 3;
+	}
+	if (InputHandler::Instance()->isKeyDown(SDL_SCANCODE_S))
+	{
+		m_textureID = "warrior_idle_down";
+		m_velocity.m_y += 3;
+	}
+	if (InputHandler::Instance()->isKeyDown(SDL_SCANCODE_A))
+	{
+		m_textureID = "warrior_idle_left";
+		m_velocity.m_x -= 3;
+	}
+	if (InputHandler::Instance()->isKeyDown(SDL_SCANCODE_D))
+	{
+		m_textureID = "warrior_idle_right";
+		m_velocity.m_x += 3;
+	}
 }
 
 void player::draw()
