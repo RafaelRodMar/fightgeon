@@ -41,6 +41,7 @@ public:
 	int m_shieldTime;
 	int m_waitTime = 0;
 	std::string m_name;
+	char m_direction = 'D';
 
 	Entity()
 	{

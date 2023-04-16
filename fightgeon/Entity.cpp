@@ -69,25 +69,46 @@ void player::update()
 
 void player::handleEvents()
 {
+	char newDirection = '0';
+
 	if (InputHandler::Instance()->isKeyDown(SDL_SCANCODE_W))
 	{
-		m_textureID = "warrior_idle_up";
+		newDirection = 'U';
 		m_velocity.m_y -= 3;
 	}
 	if (InputHandler::Instance()->isKeyDown(SDL_SCANCODE_S))
 	{
-		m_textureID = "warrior_idle_down";
+		newDirection = 'D';
 		m_velocity.m_y += 3;
 	}
 	if (InputHandler::Instance()->isKeyDown(SDL_SCANCODE_A))
 	{
-		m_textureID = "warrior_idle_left";
+		newDirection = 'L';
 		m_velocity.m_x -= 3;
 	}
 	if (InputHandler::Instance()->isKeyDown(SDL_SCANCODE_D))
 	{
-		m_textureID = "warrior_idle_right";
+		newDirection = 'R';
 		m_velocity.m_x += 3;
+	}
+
+	if (newDirection == '0')
+	{
+		//if no key pressed
+		if (m_direction == 'U') m_textureID = "warrior_idle_up";
+		if (m_direction == 'D') m_textureID = "warrior_idle_down";
+		if (m_direction == 'L') m_textureID = "warrior_idle_left";
+		if (m_direction == 'R') m_textureID = "warrior_idle_right";
+		m_width = 33; m_height = 33; m_numFrames = 1; m_currentRow = 0; m_currentFrame = 0;
+	}
+	else
+	{
+		if (newDirection == 'U') m_textureID = "warrior_walk_up";
+		if (newDirection == 'D') m_textureID = "warrior_walk_down";
+		if (newDirection == 'L') m_textureID = "warrior_walk_left";
+		if (newDirection == 'R') m_textureID = "warrior_walk_right";
+		m_width = 264/8; m_height = 33; m_numFrames = 8; m_currentRow = 0; m_currentFrame = 0;
+		m_direction = newDirection;
 	}
 }
 
