@@ -70,26 +70,60 @@ void player::update()
 void player::handleEvents()
 {
 	char newDirection = '0';
+	int tw = Game::Instance()->getTileWidth();
+	int th = Game::Instance()->getTileHeight();
 
 	if (InputHandler::Instance()->isKeyDown(SDL_SCANCODE_W))
 	{
 		newDirection = 'U';
 		m_velocity.m_y -= 3;
+		//check collisions
+		bool check = false;
+		Vector2D v = Vector2D((m_position.m_y + m_velocity.m_y) / th, (m_position.m_x + m_velocity.m_x) / tw);
+		if (!Game::Instance()->isFloor(v)) check = true; //relocate the player.
+		v = Vector2D((m_position.m_y + m_velocity.m_y) / th, (m_position.m_x + m_width + m_velocity.m_x) / tw);
+		if (!Game::Instance()->isFloor(v)) check = true; //relocate the player.
+
+		if (check == true) m_velocity.m_y += 3;
 	}
 	if (InputHandler::Instance()->isKeyDown(SDL_SCANCODE_S))
 	{
 		newDirection = 'D';
 		m_velocity.m_y += 3;
+		//check collisions
+		bool check = false;
+		Vector2D v = Vector2D((m_position.m_y + m_height + m_velocity.m_y) / th, (m_position.m_x + m_velocity.m_x) / tw);
+		if (!Game::Instance()->isFloor(v)) check = true; //relocate the player.
+		v = Vector2D((m_position.m_y + m_height + m_velocity.m_y) / th, (m_position.m_x + m_width + m_velocity.m_x) / tw);
+		if (!Game::Instance()->isFloor(v)) check = true; //relocate the player.
+
+		if (check == true) m_velocity.m_y -= 3;
 	}
 	if (InputHandler::Instance()->isKeyDown(SDL_SCANCODE_A))
 	{
 		newDirection = 'L';
 		m_velocity.m_x -= 3;
+		//check collision to the left comparing the two corners up-down/left with the map
+		bool check = false;
+		Vector2D v = Vector2D((m_position.m_y + m_velocity.m_y) / th, (m_position.m_x + m_velocity.m_x) / tw);
+		if (!Game::Instance()->isFloor(v)) check = true; //relocate the player.
+		v = Vector2D((m_position.m_y + m_height + m_velocity.m_y) / th, (m_position.m_x + m_velocity.m_x) / tw);
+		if (!Game::Instance()->isFloor(v)) check = true; //relocate the player.
+
+		if (check == true) m_velocity.m_x += 3;
 	}
 	if (InputHandler::Instance()->isKeyDown(SDL_SCANCODE_D))
 	{
 		newDirection = 'R';
 		m_velocity.m_x += 3;
+		//check collision
+		bool check = false;
+		Vector2D v = Vector2D((m_position.m_y + m_velocity.m_y) / th, (m_position.m_x + m_width + m_velocity.m_x) / tw);
+		if (!Game::Instance()->isFloor(v)) check = true; //relocate the player.
+		v = Vector2D((m_position.m_y + m_height + m_velocity.m_y) / th, (m_position.m_x + m_width + m_velocity.m_x) / tw);
+		if (!Game::Instance()->isFloor(v)) check = true; //relocate the player.
+
+		if (check == true) m_velocity.m_x -= 3;
 	}
 
 	if (newDirection == '0')
