@@ -93,7 +93,7 @@ private:
 	SDL_Window* m_pWindow;
 	SDL_Renderer* m_pRenderer;
 
-	player *p;
+	std::unique_ptr<player> p;
 	int state = -1;
 	std::vector<int> vhiscores;
 	int lives, score;

@@ -137,7 +137,6 @@ bool Game::init(const char* title, int xpos, int ypos, int width,
 	//no change, red, green, yellow, magenta, cyan
 	SDL_Color colorList[6] = { {255,255,255}, {255,0,0}, {0,255,0}, {255,253,1}, {236,5,229}, {0,255,255} };
 	colorMod = colorList[rnd.getRndInt(0, 5)];
-	std::cout << std::to_string(colorMod.r) << "," << std::to_string(colorMod.g) << "," << std::to_string(colorMod.b) << std::endl;
 	//modify the color of the tiles
 	for (int i = 0; i < 22; i++) {
 		AssetsManager::Instance()->applyColorMod(numToTile[i], colorMod.r, colorMod.g, colorMod.b);
@@ -176,7 +175,7 @@ bool Game::init(const char* title, int xpos, int ypos, int width,
 
 	populateLevel();
 
-	p = new player();
+	p = std::make_unique<player>();
 	p->settings("warrior_idle_down", Vector2D(50,50), Vector2D(0, 0), 33, 33, 1, 0, 0, 0.0, 1);
 	p->m_position += Vector2D(m_tileWidth / 2 - p->m_width / 2, m_tileHeight / 2 - p->m_height / 2);
 
@@ -209,7 +208,25 @@ void Game::render()
 			i->draw();
 
 		p->draw();
-			
+
+		//ui
+		int sw = Game::Instance()->m_gameWidth;
+		int sh = Game::Instance()->m_gameHeight;
+		int scw = Game::Instance()->m_gameWidth / 2;
+		int sch = Game::Instance()->m_gameHeight / 2;
+		AssetsManager::Instance()->draw("warrior_ui", 8, 8, 59, 59, m_pRenderer, SDL_FLIP_NONE);
+		AssetsManager::Instance()->draw("bar_outline", 105, 10, 221, 16, m_pRenderer, SDL_FLIP_NONE);
+		AssetsManager::Instance()->draw("bar_outline", 105, 30, 221, 16, m_pRenderer, SDL_FLIP_NONE);
+		AssetsManager::Instance()->draw("health_bar", 109, 15, 213, 8, m_pRenderer, SDL_FLIP_NONE);
+		AssetsManager::Instance()->draw("mana_bar", 109, 35, 213, 8, m_pRenderer, SDL_FLIP_NONE);
+		AssetsManager::Instance()->draw("gem_ui", scw - 160, 8, 84, 72, m_pRenderer, SDL_FLIP_NONE);
+		AssetsManager::Instance()->draw("coin_ui", scw + 90, 8, 96, 48, m_pRenderer, SDL_FLIP_NONE);
+		AssetsManager::Instance()->draw("key_ui", sw - 180, sh - 90, 180, 90, m_pRenderer, SDL_FLIP_NONE);
+		AssetsManager::Instance()->draw("attack_ui", scw - 270, sh - 40, 35, 35, m_pRenderer, SDL_FLIP_NONE);
+		AssetsManager::Instance()->draw("defense_ui", scw - 150, sh - 40, 35, 35, m_pRenderer, SDL_FLIP_NONE);
+		AssetsManager::Instance()->draw("strength_ui", scw - 30, sh - 40, 45, 25, m_pRenderer, SDL_FLIP_NONE);
+		AssetsManager::Instance()->draw("dexterity_ui", scw + 90, sh - 40, 35, 35, m_pRenderer, SDL_FLIP_NONE);
+		AssetsManager::Instance()->draw("stamina_ui", scw + 210, sh - 40, 35, 35, m_pRenderer, SDL_FLIP_NONE);
 	}
 
 	if (state == END_GAME)
