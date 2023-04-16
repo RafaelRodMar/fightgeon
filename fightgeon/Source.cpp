@@ -134,9 +134,10 @@ bool Game::init(const char* title, int xpos, int ypos, int width,
 		std::cout << "Error loading level data" << std::endl;
 	}
 
-	//no change, red, green, blue, yellow, magenta, cyan
-	SDL_Color colorList[7] = { {255,255,255}, {255,0,0}, {0,255,0}, {0,0,255}, {255,253,1}, {236,5,229}, {0,255,255} };
-	colorMod = colorList[rnd.getRndInt(0, 6)];
+	//no change, red, green, yellow, magenta, cyan
+	SDL_Color colorList[6] = { {255,255,255}, {255,0,0}, {0,255,0}, {255,253,1}, {236,5,229}, {0,255,255} };
+	colorMod = colorList[rnd.getRndInt(0, 5)];
+	std::cout << std::to_string(colorMod.r) << "," << std::to_string(colorMod.g) << "," << std::to_string(colorMod.b) << std::endl;
 	//modify the color of the tiles
 	for (int i = 0; i < 22; i++) {
 		AssetsManager::Instance()->applyColorMod(numToTile[i], colorMod.r, colorMod.g, colorMod.b);
