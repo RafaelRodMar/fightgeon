@@ -37,6 +37,7 @@ enum class TILE {
 	COUNT
 };
 
+//the map is in the format row,column.
 struct Tile {
 	TILE type;
 	int columnIndex;
