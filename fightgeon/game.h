@@ -107,6 +107,8 @@ private:
 	void createPath(int columnIndex, int rowIndex);
 	void createRooms(int roomCount);
 	void calculateTextures();
+	int gemScore = 0;
+	int goldScore = 0;
 	
 	std::string numToTile[22] = { "wall_single", "wall_top_end", "wall_side_right_end", "wall_bottom_left", "wall_bottom_end",
 						 "wall_side", "wall_top_left", "wall_side_left_t", "wall_side_left_end", "wall_bottom_right", "wall_top",

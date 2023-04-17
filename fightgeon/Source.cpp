@@ -2,6 +2,7 @@
 #include<sdl_ttf.h>
 #include<iostream>
 #include<fstream>
+#include<sstream>
 #include<random>
 #include<time.h>
 #include<chrono>
@@ -237,7 +238,16 @@ void Game::render()
 		AssetsManager::Instance()->draw("health_bar", 109, 15, 213, 8, m_pRenderer, SDL_FLIP_NONE);
 		AssetsManager::Instance()->draw("mana_bar", 109, 35, 213, 8, m_pRenderer, SDL_FLIP_NONE);
 		AssetsManager::Instance()->draw("gem_ui", scw - 160, 8, 84, 72, m_pRenderer, SDL_FLIP_NONE);
+		//set a number with leading zeroes
+		std::stringstream ss;
+		ss << std::setw(6) << std::setfill('0') << gemScore;
+		std::string num = ss.str();
+		AssetsManager::Instance()->Text(num, "fontad", scw - 50, 20, { 255,255,255,255 }, m_pRenderer);
 		AssetsManager::Instance()->draw("coin_ui", scw + 90, 8, 96, 48, m_pRenderer, SDL_FLIP_NONE);
+		ss.str(std::string()); //clear the stringstream
+		ss << std::setw(6) << std::setfill('0') << goldScore;
+		num = ss.str();
+		AssetsManager::Instance()->Text(num, "fontad", scw + 200, 20, { 255,255,255,255 }, m_pRenderer);
 		AssetsManager::Instance()->draw("key_ui", sw - 180, sh - 90, 180, 90, m_pRenderer, SDL_FLIP_NONE);
 		AssetsManager::Instance()->draw("attack_ui", scw - 270, sh - 40, 35, 35, m_pRenderer, SDL_FLIP_NONE);
 		AssetsManager::Instance()->Text(std::to_string(p->m_attack), "fontad", scw - 210, sh - 35, { 255,255,255,255 }, m_pRenderer);
@@ -597,7 +607,7 @@ int main(int argc, char* args[])
 	Uint32 frameStart, frameTime;
 
 	std::cout << "game init attempt...\n";
-	if (Game::Instance()->init("Procedural Content Generation", 20, 20, 1024, 950,
+	if (Game::Instance()->init("Procedural Content Generation", 20, 20, 950, 950,
 		false))
 	{
 		std::cout << "game init success!\n";
