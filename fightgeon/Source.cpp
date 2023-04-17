@@ -175,9 +175,26 @@ bool Game::init(const char* title, int xpos, int ypos, int width,
 
 	populateLevel();
 
+	//create player
 	p = std::make_unique<player>();
 	p->settings("warrior_idle_down", Vector2D(50,50), Vector2D(0, 0), 33, 33, 1, 0, 0, 0.0, 1);
 	p->m_position += Vector2D(m_tileWidth / 2 - p->m_width / 2, m_tileHeight / 2 - p->m_height / 2);
+
+	//set the stats
+	int m_statPoints = 50;
+	float attackBias = rnd.getRndInt(0, 100);
+	float defenseBias = rnd.getRndInt(0, 100);
+	float strengthBias = rnd.getRndInt(0, 100);
+	float dexterityBias = rnd.getRndInt(0, 100);
+	float staminaBias = rnd.getRndInt(0, 100);
+
+	float total = attackBias + defenseBias + strengthBias + dexterityBias + staminaBias;
+
+	p->m_attack += m_statPoints * (attackBias / total);
+	p->m_defense += m_statPoints * (defenseBias / total);
+	p->m_strength += m_statPoints * (strengthBias / total);
+	p->m_dexterity += m_statPoints * (dexterityBias / total);
+	p->m_stamina += m_statPoints * (staminaBias / total);
 
 	state = GAME;
 
@@ -223,10 +240,15 @@ void Game::render()
 		AssetsManager::Instance()->draw("coin_ui", scw + 90, 8, 96, 48, m_pRenderer, SDL_FLIP_NONE);
 		AssetsManager::Instance()->draw("key_ui", sw - 180, sh - 90, 180, 90, m_pRenderer, SDL_FLIP_NONE);
 		AssetsManager::Instance()->draw("attack_ui", scw - 270, sh - 40, 35, 35, m_pRenderer, SDL_FLIP_NONE);
+		AssetsManager::Instance()->Text(std::to_string(p->m_attack), "fontad", scw - 210, sh - 35, { 255,255,255,255 }, m_pRenderer);
 		AssetsManager::Instance()->draw("defense_ui", scw - 150, sh - 40, 35, 35, m_pRenderer, SDL_FLIP_NONE);
+		AssetsManager::Instance()->Text(std::to_string(p->m_defense), "fontad", scw - 90, sh - 35, { 255,255,255,255 }, m_pRenderer);
 		AssetsManager::Instance()->draw("strength_ui", scw - 30, sh - 40, 45, 25, m_pRenderer, SDL_FLIP_NONE);
+		AssetsManager::Instance()->Text(std::to_string(p->m_strength), "fontad", scw + 30, sh - 35, { 255,255,255,255 }, m_pRenderer);
 		AssetsManager::Instance()->draw("dexterity_ui", scw + 90, sh - 40, 35, 35, m_pRenderer, SDL_FLIP_NONE);
+		AssetsManager::Instance()->Text(std::to_string(p->m_dexterity), "fontad", scw + 150, sh - 35, { 255,255,255,255 }, m_pRenderer);
 		AssetsManager::Instance()->draw("stamina_ui", scw + 210, sh - 40, 35, 35, m_pRenderer, SDL_FLIP_NONE);
+		AssetsManager::Instance()->Text(std::to_string(p->m_stamina), "fontad", scw + 270, sh - 35, { 255,255,255,255 }, m_pRenderer);
 	}
 
 	if (state == END_GAME)

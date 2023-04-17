@@ -111,6 +111,15 @@ public:
 class player : public Entity
 {
 public:
+	int m_health = 0;
+	int m_maxHealth = 0;
+	int m_mana = 0;
+	int m_maxMana = 0;
+	int m_attack = 0;
+	int m_defense = 0;
+	int m_strength = 0;
+	int m_dexterity = 0;
+	int m_stamina = 0;
 
 	player()
 	{
