@@ -6,9 +6,12 @@
 #include "AssetsManager.h"
 #include "InputHandler.h"
 #include "Entity.h"
+#include "statemachine.h"
+#include "menuState.h"
+#include "gamestate.h"
 
 ////Game States
-enum GAMESTATES { MENU, LOAD_LEVEL, GAME, END_GAME };
+enum GAMESTATES { AMENU, LOAD_LEVEL, AGAME, END_GAME };
 
 // Tiles.
 enum class TILE {
@@ -93,6 +96,8 @@ private:
 	static Game* s_pInstance;
 	SDL_Window* m_pWindow;
 	SDL_Renderer* m_pRenderer;
+
+	StateMachine* m_state;
 
 	std::unique_ptr<player> p;
 	int state = -1;

@@ -132,16 +132,23 @@
   <ItemGroup>
     <ClCompile Include="AssetsManager.cpp" />
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="GameState.cpp" />
     <ClCompile Include="InputHandler.cpp" />
+    <ClCompile Include="menuState.cpp" />
     <ClCompile Include="Source.cpp" />
+    <ClCompile Include="statemachine.cpp" />
     <ClCompile Include="Vector2D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssetsManager.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="game.h" />
+    <ClInclude Include="GameState.h" />
     <ClInclude Include="InputHandler.h" />
     <ClInclude Include="json.hpp" />
+    <ClInclude Include="menuState.h" />
+    <ClInclude Include="state.h" />
+    <ClInclude Include="statemachine.h" />
     <ClInclude Include="Vector2D.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

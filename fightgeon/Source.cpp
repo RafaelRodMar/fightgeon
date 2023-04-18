@@ -197,7 +197,12 @@ bool Game::init(const char* title, int xpos, int ypos, int width,
 	p->m_dexterity += m_statPoints * (dexterityBias / total);
 	p->m_stamina += m_statPoints * (staminaBias / total);
 
-	state = GAME;
+	m_state = new StateMachine();
+	m_state->m_menuState = new MenuState();
+	m_state->m_gameState = new GameState();
+	m_state->changeState(GAME);
+
+	state = AGAME;
 
 	return true;
 }
@@ -207,11 +212,11 @@ void Game::render()
 	SDL_SetRenderDrawColor(Game::Instance()->getRenderer(), 0, 0, 0, 255);
 	SDL_RenderClear(m_pRenderer); // clear the renderer to the draw color
 
-	if (state == MENU)
+	if (state == AMENU)
 	{
 	}
 
-	if (state == GAME)
+	if (state == AGAME)
 	{
 		for (int i = 0; i < 19; i++) {
 			for (int j = 0; j < 19; j++) {
@@ -279,6 +284,8 @@ void Game::clean()
 	std::cout << "cleaning game\n";
 	InputHandler::Instance()->clean();
 	AssetsManager::Instance()->clearFonts();
+	m_state->clean();
+	delete(m_state);
 	TTF_Quit();
 	Game::Instance()->m_bRunning = false;
 	SDL_DestroyWindow(m_pWindow);
@@ -291,11 +298,11 @@ void Game::handleEvents()
 	InputHandler::Instance()->update();
 
 	//HandleKeys
-	if (state == MENU)
+	if (state == AMENU)
 	{
 	}
 
-	if (state == GAME)
+	if (state == AGAME)
 	{
 		p->handleEvents();
 	}
@@ -326,7 +333,7 @@ bool Game::isCollideRect(Entity *a, Entity * b) {
 
 void Game::update()
 {
-	if (state == GAME)
+	if (state == AGAME)
 	{
 
 		for (auto i = entities.begin(); i != entities.end(); i++)
