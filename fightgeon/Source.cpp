@@ -200,7 +200,8 @@ bool Game::init(const char* title, int xpos, int ypos, int width,
 	m_state = new StateMachine();
 	m_state->m_menuState = new MenuState();
 	m_state->m_gameState = new GameState();
-	m_state->changeState(GAME);
+	//m_state->changeState(GAME);
+	m_state->changeState(MENU);
 
 	state = AGAME;
 
@@ -211,6 +212,8 @@ void Game::render()
 {
 	SDL_SetRenderDrawColor(Game::Instance()->getRenderer(), 0, 0, 0, 255);
 	SDL_RenderClear(m_pRenderer); // clear the renderer to the draw color
+
+	//m_state->render();
 
 	if (state == AMENU)
 	{
@@ -333,6 +336,8 @@ bool Game::isCollideRect(Entity *a, Entity * b) {
 
 void Game::update()
 {
+	//m_state->update();
+
 	if (state == AGAME)
 	{
 

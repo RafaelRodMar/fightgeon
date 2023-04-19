@@ -12,7 +12,7 @@ public:
 
 	virtual void update();
 	virtual void render();
-
+	virtual void handleEvents();
 	virtual bool onEnter();
 	virtual bool onExit();
 

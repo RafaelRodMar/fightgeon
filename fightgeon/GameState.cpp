@@ -19,6 +19,10 @@ void GameState::render()
 {
 }
 
+void GameState::handleEvents()
+{
+}
+
 bool GameState::onEnter()
 {
 	return false;
