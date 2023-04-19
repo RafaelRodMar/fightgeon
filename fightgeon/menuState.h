@@ -17,7 +17,7 @@ public:
 	virtual bool onEnter();
 	virtual bool onExit();
 
-	virtual std::string getStateID() const { return s_ID; }
+	virtual STATES getStateID() const { return s_ID; }
 
 	SDL_Rect button0;
 	Uint8 r0, g0, b0, a0;
@@ -25,5 +25,5 @@ public:
 	Uint8 r1, g1, b1, a1;
 
 private:
-	static const std::string s_ID;
+	static const STATES s_ID;
 };

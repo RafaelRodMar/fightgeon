@@ -23,6 +23,10 @@ void StateMachine::render()
 	m_currentState->render();
 }
 
+void StateMachine::handleEvents()
+{
+}
+
 void StateMachine::clean() {
 	m_currentState = nullptr;
 

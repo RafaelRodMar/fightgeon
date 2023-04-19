@@ -1,6 +1,6 @@
 #include "menuState.h"
 #include "game.h"
-const std::string MenuState::s_ID = "MENUSTATE";
+const STATES MenuState::s_ID = MENU;
 
 MenuState::MenuState()
 {
