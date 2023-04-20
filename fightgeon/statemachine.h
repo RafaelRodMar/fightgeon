@@ -3,6 +3,8 @@
 #include "state.h"
 #include <vector>
 
+enum STATES { MENU, GAME };
+
 class StateMachine
 {
 public:
@@ -13,7 +15,6 @@ public:
 
 	void update();
 	void render();
-	void handleEvents();
 	void clean();
 
 	State* m_menuState;

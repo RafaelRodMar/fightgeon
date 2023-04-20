@@ -1,75 +1,10 @@
-#include <fstream>
 #include "GameState.h"
 #include "game.h"
 
-const STATES GameState::s_ID = GAME;
+const std::string GameState::s_ID = "GAMESTATE";
 
 GameState::GameState()
 {
-	//read level data from file (the data is not used)
-	std::ifstream in("assets/data/level_data.txt");
-	if (in.good())
-	{
-		std::string str;
-		int row = 0;
-		while (std::getline(in, str))
-		{
-			std::stringstream ss(str);
-			int data;
-			for (int i = 0; i < 19; i++) {
-				ss >> data;
-				level[row][i] = data;
-			}
-			row++;
-		}
-		in.close();
-	}
-	else
-	{
-		std::cout << "Error loading level data" << std::endl;
-	}
-
-	//no change, red, green, yellow, magenta, cyan
-	SDL_Color colorList[6] = { {255,255,255}, {255,0,0}, {0,255,0}, {255,253,1}, {236,5,229}, {0,255,255} };
-	colorMod = colorList[rnd.getRndInt(0, 5)];
-	//modify the color of the tiles
-	for (int i = 0; i < 22; i++) {
-		AssetsManager::Instance()->applyColorMod(numToTile[i], colorMod.r, colorMod.g, colorMod.b);
-	}
-
-	//now there is a map loaded from a file. Let´s create a randomized map
-
-	//first create a grid of nodes (all walls, the nodes are empty)
-	//the nodes are the ones with row and col are odd
-	for (int i = 0; i < 19; i++) {
-		for (int j = 0; j < 19; j++) {
-			if ((i % 2 != 0) && (j % 2 != 0))
-			{
-				level[i][j] = 21; //empty cell
-			}
-			else
-			{
-				level[i][j] = 10; //wall_top
-			}
-		}
-	}
-
-	//now carve passages between nodes.
-	//1- choose a random direction and make a connection to the adjacent node if it
-	//has not yet been visited. This node becomes the current node.
-	//2- if all adjacent cells in each direction have already been visited, go back to 
-	//the last cell.
-	//3- if you're back at the start node, the algorithm is complete.
-	createPath(1, 1);
-
-	//add some rooms to the level to create some open space.
-	createRooms(10);
-
-	//give each tile the correct texture
-	calculateTextures();
-
-	populateLevel();
-
 }
 
 
@@ -79,69 +14,14 @@ GameState::~GameState()
 
 void GameState::update()
 {
-	/*for (auto i = entities.begin(); i != entities.end(); i++)
-	{
-		Entity *e = *i;
-
-		e->update();
-	}*/
-
-	for (auto& i : m_items)
-		i->update();
-
-	Game::Instance()->p->update();
 }
 
 void GameState::render()
 {
-	for (int i = 0; i < 19; i++) {
-		for (int j = 0; j < 19; j++) {
-			AssetsManager::Instance()->draw(numToTile[level[i][j]], j * m_tileWidth, i * m_tileHeight, m_tileWidth, m_tileHeight, Game::Instance()->getRenderer());
-		}
-	}
-
-	for (auto& i : m_items)
-		i->draw();
-
-	Game::Instance()->p->draw();
-
-	//ui
-	int sw = Game::Instance()->getGameWidth();
-	int sh = Game::Instance()->getGameHeight();
-	int scw = Game::Instance()->getGameWidth() / 2;
-	int sch = Game::Instance()->getGameHeight() / 2;
-	AssetsManager::Instance()->draw("warrior_ui", 8, 8, 59, 59, Game::Instance()->getRenderer(), SDL_FLIP_NONE);
-	AssetsManager::Instance()->draw("bar_outline", 105, 10, 221, 16, Game::Instance()->getRenderer(), SDL_FLIP_NONE);
-	AssetsManager::Instance()->draw("bar_outline", 105, 30, 221, 16, Game::Instance()->getRenderer(), SDL_FLIP_NONE);
-	AssetsManager::Instance()->draw("health_bar", 109, 15, 213, 8, Game::Instance()->getRenderer(), SDL_FLIP_NONE);
-	AssetsManager::Instance()->draw("mana_bar", 109, 35, 213, 8, Game::Instance()->getRenderer(), SDL_FLIP_NONE);
-	AssetsManager::Instance()->draw("gem_ui", scw - 160, 8, 84, 72, Game::Instance()->getRenderer(), SDL_FLIP_NONE);
-	//set a number with leading zeroes
-	std::stringstream ss;
-	ss << std::setw(6) << std::setfill('0') << gemScore;
-	std::string num = ss.str();
-	AssetsManager::Instance()->Text(num, "fontad", scw - 50, 20, { 255,255,255,255 }, Game::Instance()->getRenderer());
-	AssetsManager::Instance()->draw("coin_ui", scw + 90, 8, 96, 48, Game::Instance()->getRenderer(), SDL_FLIP_NONE);
-	ss.str(std::string()); //clear the stringstream
-	ss << std::setw(6) << std::setfill('0') << goldScore;
-	num = ss.str();
-	AssetsManager::Instance()->Text(num, "fontad", scw + 200, 20, { 255,255,255,255 }, Game::Instance()->getRenderer());
-	AssetsManager::Instance()->draw("key_ui", sw - 180, sh - 90, 180, 90, Game::Instance()->getRenderer(), SDL_FLIP_NONE);
-	AssetsManager::Instance()->draw("attack_ui", scw - 270, sh - 40, 35, 35, Game::Instance()->getRenderer(), SDL_FLIP_NONE);
-	AssetsManager::Instance()->Text(std::to_string(Game::Instance()->p->m_attack), "fontad", scw - 210, sh - 35, { 255,255,255,255 }, Game::Instance()->getRenderer());
-	AssetsManager::Instance()->draw("defense_ui", scw - 150, sh - 40, 35, 35, Game::Instance()->getRenderer(), SDL_FLIP_NONE);
-	AssetsManager::Instance()->Text(std::to_string(Game::Instance()->p->m_defense), "fontad", scw - 90, sh - 35, { 255,255,255,255 }, Game::Instance()->getRenderer());
-	AssetsManager::Instance()->draw("strength_ui", scw - 30, sh - 40, 45, 25, Game::Instance()->getRenderer(), SDL_FLIP_NONE);
-	AssetsManager::Instance()->Text(std::to_string(Game::Instance()->p->m_strength), "fontad", scw + 30, sh - 35, { 255,255,255,255 }, Game::Instance()->getRenderer());
-	AssetsManager::Instance()->draw("dexterity_ui", scw + 90, sh - 40, 35, 35, Game::Instance()->getRenderer(), SDL_FLIP_NONE);
-	AssetsManager::Instance()->Text(std::to_string(Game::Instance()->p->m_dexterity), "fontad", scw + 150, sh - 35, { 255,255,255,255 }, Game::Instance()->getRenderer());
-	AssetsManager::Instance()->draw("stamina_ui", scw + 210, sh - 40, 35, 35, Game::Instance()->getRenderer(), SDL_FLIP_NONE);
-	AssetsManager::Instance()->Text(std::to_string(Game::Instance()->p->m_stamina), "fontad", scw + 270, sh - 35, { 255,255,255,255 }, Game::Instance()->getRenderer());
 }
 
 void GameState::handleEvents()
 {
-	Game::Instance()->p->handleEvents();
 }
 
 bool GameState::onEnter()
@@ -173,7 +53,7 @@ void GameState::populateLevel()
 	int r = rnd.getRndInt(0, floorTiles.size() - 1);
 	gem->settings("gem", floorTiles[r] * 50, Vector2D(0, 0), 168 / 8, 25, 8, 0, 0, 0.0, 1);
 	//center the position of the item in the tile
-	gem->m_position += Vector2D(m_tileWidth / 2 - gem->m_width / 2, m_tileHeight / 2 - gem->m_height / 2);
+	gem->m_position += Vector2D(Game::Instance()->getTileWidth() / 2 - gem->m_width / 2, Game::Instance()->getTileHeight() / 2 - gem->m_height / 2);
 	//add the gem to the collection of all objects. (need to use std::move for unique_ptr)
 	m_items.push_back(std::move(gem));
 
