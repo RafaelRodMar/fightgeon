@@ -6,12 +6,9 @@
 #include "AssetsManager.h"
 #include "InputHandler.h"
 #include "Entity.h"
-#include "statemachine.h"
-#include "menuState.h"
-#include "gamestate.h"
 
 ////Game States
-enum GAMESTATES { AMENU, LOAD_LEVEL, AGAME, END_GAME };
+enum GAMESTATES { MENU, CHOOSEHERO, GAME, ENDGAME };
 
 // Tiles.
 enum class TILE {
@@ -97,8 +94,6 @@ private:
 	SDL_Window* m_pWindow;
 	SDL_Renderer* m_pRenderer;
 
-	StateMachine* m_state;
-
 	std::unique_ptr<player> p;
 	int state = -1;
 	std::vector<int> vhiscores;
@@ -121,7 +116,7 @@ private:
 						 "door_locked", "door_unlocked", "wall_entrance", "floor", "floor_alt", "empty" };
 
 
-	std::list<Entity*> entities;
+	//std::list<Entity*> entities;
 	bool isCollide(Entity *a, Entity *b);
 	bool isCollideRect(Entity *a, Entity *b);
 	//std::vector<GameObject*> m_gameObjects;

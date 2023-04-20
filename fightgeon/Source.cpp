@@ -112,7 +112,7 @@ bool Game::init(const char* title, int xpos, int ypos, int width,
 
 	ReadHiScores();
 
-	//read level data from file
+	//read level data from file (the data is not used in this game)
 	std::ifstream in("assets/data/level_data.txt");
 	if (in.good())
 	{
@@ -197,13 +197,7 @@ bool Game::init(const char* title, int xpos, int ypos, int width,
 	p->m_dexterity += m_statPoints * (dexterityBias / total);
 	p->m_stamina += m_statPoints * (staminaBias / total);
 
-	m_state = new StateMachine();
-	m_state->m_menuState = new MenuState();
-	m_state->m_gameState = new GameState();
-	//m_state->changeState(GAME);
-	m_state->changeState(MENU);
-
-	state = AGAME;
+	state = GAME;
 
 	return true;
 }
@@ -213,13 +207,11 @@ void Game::render()
 	SDL_SetRenderDrawColor(Game::Instance()->getRenderer(), 0, 0, 0, 255);
 	SDL_RenderClear(m_pRenderer); // clear the renderer to the draw color
 
-	//m_state->render();
-
-	if (state == AMENU)
+	if (state == MENU)
 	{
 	}
 
-	if (state == AGAME)
+	if (state == GAME)
 	{
 		for (int i = 0; i < 19; i++) {
 			for (int j = 0; j < 19; j++) {
@@ -227,8 +219,8 @@ void Game::render()
 			}
 		}
 
-		for (auto& i : entities)
-			i->draw();
+		/*for (auto& i : entities)
+			i->draw();*/
 
 		for (auto& i : m_items)
 			i->draw();
@@ -269,7 +261,7 @@ void Game::render()
 		AssetsManager::Instance()->Text(std::to_string(p->m_stamina), "fontad", scw + 270, sh - 35, { 255,255,255,255 }, m_pRenderer);
 	}
 
-	if (state == END_GAME)
+	if (state == ENDGAME)
 	{
 	}
 
@@ -287,8 +279,6 @@ void Game::clean()
 	std::cout << "cleaning game\n";
 	InputHandler::Instance()->clean();
 	AssetsManager::Instance()->clearFonts();
-	m_state->clean();
-	delete(m_state);
 	TTF_Quit();
 	Game::Instance()->m_bRunning = false;
 	SDL_DestroyWindow(m_pWindow);
@@ -301,16 +291,16 @@ void Game::handleEvents()
 	InputHandler::Instance()->update();
 
 	//HandleKeys
-	if (state == AMENU)
+	if (state == MENU)
 	{
 	}
 
-	if (state == AGAME)
+	if (state == GAME)
 	{
 		p->handleEvents();
 	}
 
-	if (state == END_GAME)
+	if (state == ENDGAME)
 	{
 
 	}
@@ -338,15 +328,15 @@ void Game::update()
 {
 	//m_state->update();
 
-	if (state == AGAME)
+	if (state == GAME)
 	{
 
-		for (auto i = entities.begin(); i != entities.end(); i++)
+		/*for (auto i = entities.begin(); i != entities.end(); i++)
 		{
 			Entity *e = *i;
 
 			e->update();
-		}
+		}*/
 
 		for (auto& i : m_items)
 			i->update();
