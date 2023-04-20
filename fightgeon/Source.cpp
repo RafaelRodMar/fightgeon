@@ -228,6 +228,11 @@ void Game::render()
 		AssetsManager::Instance()->Text("Exit", "fontad", 130, 40, { 255,255,255,255 }, m_pRenderer);
 	}
 
+	if (state == CHOOSEHERO)
+	{
+
+	}
+
 	if (state == GAME)
 	{
 		for (int i = 0; i < 19; i++) {
@@ -330,9 +335,15 @@ void Game::handleEvents()
 		}
 	}
 
+	if (state == CHOOSEHERO)
+	{
+
+	}
+
 	if (state == GAME)
 	{
 		p->handleEvents();
+		if (InputHandler::Instance()->isKeyDown(SDL_SCANCODE_ESCAPE)) state = MENU;
 	}
 
 	if (state == ENDGAME)
@@ -377,6 +388,11 @@ void Game::update()
 		{
 			g1 = 180;
 		}
+	}
+
+	if (state == CHOOSEHERO)
+	{
+
 	}
 
 	if (state == GAME)
