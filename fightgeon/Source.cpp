@@ -203,7 +203,7 @@ bool Game::init(const char* title, int xpos, int ypos, int width,
 	button1 = { 105,0, 100,100 };
 	r1 = 0; g1 = 255; b1 = 0; a1 = 255;
 
-	state = GAME;
+	state = MENU;
 
 	return true;
 }
@@ -224,6 +224,8 @@ void Game::render()
 		SDL_RenderFillRect(Game::Instance()->getRenderer(), &button1);
 
 		SDL_SetRenderDrawColor(Game::Instance()->getRenderer(), r, g, b, a);
+		AssetsManager::Instance()->Text("Start", "fontad", 10, 40, { 255,255,255,255 }, m_pRenderer);
+		AssetsManager::Instance()->Text("Exit", "fontad", 130, 40, { 255,255,255,255 }, m_pRenderer);
 	}
 
 	if (state == GAME)
@@ -308,6 +310,24 @@ void Game::handleEvents()
 	//HandleKeys
 	if (state == MENU)
 	{
+		if (InputHandler::Instance()->getMouseButtonState(LEFT))
+		{
+			Vector2D* mousePos = InputHandler::Instance()->getMousePosition();
+
+			if (mousePos->m_x > button0.x && mousePos->m_x < button0.x + button0.w &&
+				mousePos->m_y > button0.y && mousePos->m_y < button0.y + button0.h)
+			{
+				state = GAME;
+			}
+
+			if (mousePos->m_x > button1.x && mousePos->m_x < button1.x + button1.w &&
+				mousePos->m_y > button1.y && mousePos->m_y < button1.y + button1.h)
+			{
+				quit();
+			}
+
+			InputHandler::Instance()->reset(); //reset the buttons
+		}
 	}
 
 	if (state == GAME)
