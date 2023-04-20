@@ -10,29 +10,6 @@
 #include "menuState.h"
 #include "gamestate.h"
 
-class Rnd {
-public:
-	std::mt19937 rng;
-
-	Rnd()
-	{
-		std::mt19937 prng(std::chrono::steady_clock::now().time_since_epoch().count());
-		rng = prng;
-	}
-
-	int getRndInt(int min, int max)
-	{
-		std::uniform_int_distribution<int> distribution(min, max);
-		return distribution(rng);
-	}
-
-	double getRndDouble(double min, double max)
-	{
-		std::uniform_real_distribution<double> distribution(min, max);
-		return distribution(rng);
-	}
-} rnd;
-
 ////Game States
 enum GAMESTATES { AMENU, LOAD_LEVEL, AGAME, END_GAME };
 
