@@ -94,6 +94,12 @@ private:
 	SDL_Window* m_pWindow;
 	SDL_Renderer* m_pRenderer;
 
+	//menu
+	SDL_Rect button0;
+	Uint8 r0, g0, b0, a0;
+	SDL_Rect button1;
+	Uint8 r1, g1, b1, a1;
+
 	std::unique_ptr<player> p;
 	int state = -1;
 	std::vector<int> vhiscores;
