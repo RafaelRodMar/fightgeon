@@ -280,10 +280,10 @@ void Game::render()
 		int scw = Game::Instance()->m_gameWidth / 2;
 		int sch = Game::Instance()->m_gameHeight / 2;
 		AssetsManager::Instance()->draw(heroType[heroNum] + "_ui", 8, 8, 59, 59, m_pRenderer, SDL_FLIP_NONE);
-		AssetsManager::Instance()->draw("bar_outline", 105, 10, 221, 16, m_pRenderer, SDL_FLIP_NONE);
-		AssetsManager::Instance()->draw("bar_outline", 105, 30, 221, 16, m_pRenderer, SDL_FLIP_NONE);
-		AssetsManager::Instance()->draw("health_bar", 109, 15, 213, 8, m_pRenderer, SDL_FLIP_NONE);
-		AssetsManager::Instance()->draw("mana_bar", 109, 35, 213, 8, m_pRenderer, SDL_FLIP_NONE);
+		AssetsManager::Instance()->draw("bar_outline", 90, 10, 221, 16, m_pRenderer, SDL_FLIP_NONE);
+		AssetsManager::Instance()->draw("bar_outline", 90, 30, 221, 16, m_pRenderer, SDL_FLIP_NONE);
+		AssetsManager::Instance()->draw("health_bar", 96, 15, 213, 8, m_pRenderer, SDL_FLIP_NONE);
+		AssetsManager::Instance()->draw("mana_bar", 96, 35, 213, 8, m_pRenderer, SDL_FLIP_NONE);
 		AssetsManager::Instance()->draw("gem_ui", scw - 160, 8, 84, 72, m_pRenderer, SDL_FLIP_NONE);
 		//set a number with leading zeroes
 		std::stringstream ss;
