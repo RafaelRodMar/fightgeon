@@ -126,21 +126,22 @@ void player::handleEvents()
 		if (check == true) m_velocity.m_x -= 3;
 	}
 
+	m_textureID = type; //archer, thief, warrior or mage
 	if (newDirection == '0')
 	{
 		//if no key pressed
-		if (m_direction == 'U') m_textureID = "warrior_idle_up";
-		if (m_direction == 'D') m_textureID = "warrior_idle_down";
-		if (m_direction == 'L') m_textureID = "warrior_idle_left";
-		if (m_direction == 'R') m_textureID = "warrior_idle_right";
+		if (m_direction == 'U') m_textureID += "_idle_up";
+		if (m_direction == 'D') m_textureID += "_idle_down";
+		if (m_direction == 'L') m_textureID += "_idle_left";
+		if (m_direction == 'R') m_textureID += "_idle_right";
 		m_width = 33; m_height = 33; m_numFrames = 1; m_currentRow = 0; m_currentFrame = 0;
 	}
 	else
 	{
-		if (newDirection == 'U') m_textureID = "warrior_walk_up";
-		if (newDirection == 'D') m_textureID = "warrior_walk_down";
-		if (newDirection == 'L') m_textureID = "warrior_walk_left";
-		if (newDirection == 'R') m_textureID = "warrior_walk_right";
+		if (newDirection == 'U') m_textureID += "_walk_up";
+		if (newDirection == 'D') m_textureID += "_walk_down";
+		if (newDirection == 'L') m_textureID += "_walk_left";
+		if (newDirection == 'R') m_textureID += "_walk_right";
 		m_width = 264/8; m_height = 33; m_numFrames = 8; m_currentRow = 0; m_currentFrame = 0;
 		m_direction = newDirection;
 	}

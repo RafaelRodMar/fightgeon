@@ -100,6 +100,16 @@ private:
 	SDL_Rect button1;
 	Uint8 r1, g1, b1, a1;
 
+	//choose hero
+	int heroNum = 0;
+	std::string heroType[4] = { "archer", "thief", "warrior", "mage" };
+	SDL_Rect button2;
+	Uint8 r2, g2, b2, a2;
+	SDL_Rect button3;
+	Uint8 r3, g3, b3, a3;
+	SDL_Rect button4;
+	Uint8 r4, g4, b4, a4;
+
 	std::unique_ptr<player> p;
 	int state = -1;
 	std::vector<int> vhiscores;

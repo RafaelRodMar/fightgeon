@@ -120,6 +120,7 @@ public:
 	int m_strength = 0;
 	int m_dexterity = 0;
 	int m_stamina = 0;
+	std::string type = "";
 
 	player()
 	{

@@ -1,4 +1,4 @@
-#include<SDL.h>
+﻿#include<SDL.h>
 #include<sdl_ttf.h>
 #include<iostream>
 #include<fstream>
@@ -143,7 +143,7 @@ bool Game::init(const char* title, int xpos, int ypos, int width,
 		AssetsManager::Instance()->applyColorMod(numToTile[i], colorMod.r, colorMod.g, colorMod.b);
 	}
 
-	//now there is a map loaded from a file. Let�s create a randomized map
+	//now there is a map loaded from a file. Let´s create a randomized map
 
 	//first create a grid of nodes (all walls, the nodes are empty)
 	//the nodes are the ones with row and col are odd
@@ -180,6 +180,7 @@ bool Game::init(const char* title, int xpos, int ypos, int width,
 	p = std::make_unique<player>();
 	p->settings("warrior_idle_down", Vector2D(50,50), Vector2D(0, 0), 33, 33, 1, 0, 0, 0.0, 1);
 	p->m_position += Vector2D(m_tileWidth / 2 - p->m_width / 2, m_tileHeight / 2 - p->m_height / 2);
+	p->type = "warrior"; //default character
 
 	//set the stats
 	int m_statPoints = 50;
@@ -202,6 +203,14 @@ bool Game::init(const char* title, int xpos, int ypos, int width,
 	r0 = 0; g0 = 0; b0 = 255; a0 = 255;
 	button1 = { 105,0, 100,100 };
 	r1 = 0; g1 = 255; b1 = 0; a1 = 255;
+
+	//choose hero init
+	button2 = { 0,0,100,100 };
+	r2 = 0; g2 = 0; b2 = 255; a2 = 255;
+	button3 = { 105, 0, 100, 50 };
+	r3 = 0; g3 = 255; b3 = 0; a3 = 255;
+	button4 = { 105, 51, 100, 50 };
+	r4 = 0; g4 = 150; b4 = 0; a4 = 255;
 
 	state = MENU;
 
@@ -230,7 +239,23 @@ void Game::render()
 
 	if (state == CHOOSEHERO)
 	{
+		Uint8 r, g, b, a;
+		SDL_GetRenderDrawColor(Game::Instance()->getRenderer(), &r, &g, &b, &a);
 
+		SDL_SetRenderDrawColor(Game::Instance()->getRenderer(), r2, g2, b2, a2);
+		SDL_RenderFillRect(Game::Instance()->getRenderer(), &button2);
+		SDL_SetRenderDrawColor(Game::Instance()->getRenderer(), r3, g3, b3, a3);
+		SDL_RenderFillRect(Game::Instance()->getRenderer(), &button3);
+		SDL_SetRenderDrawColor(Game::Instance()->getRenderer(), r4, g4, b4, a4);
+		SDL_RenderFillRect(Game::Instance()->getRenderer(), &button4);
+
+		SDL_SetRenderDrawColor(Game::Instance()->getRenderer(), r, g, b, a);
+		AssetsManager::Instance()->Text(" GO ", "fontad", 10, 40, { 255,255,255,255 }, m_pRenderer);
+		AssetsManager::Instance()->Text("next", "fontad", 120, 20, { 255,255,255,255 }, m_pRenderer);
+		AssetsManager::Instance()->Text("last", "fontad", 120, 60, { 255,255,255,255 }, m_pRenderer);
+
+		AssetsManager::Instance()->draw(heroType[heroNum] + "_ui", 250, 20, 59, 59, m_pRenderer, SDL_FLIP_NONE);
+		AssetsManager::Instance()->Text(heroType[heroNum], "fontad", 250, 90, { 255,255,255,255 }, m_pRenderer);
 	}
 
 	if (state == GAME)
@@ -254,7 +279,7 @@ void Game::render()
 		int sh = Game::Instance()->m_gameHeight;
 		int scw = Game::Instance()->m_gameWidth / 2;
 		int sch = Game::Instance()->m_gameHeight / 2;
-		AssetsManager::Instance()->draw("warrior_ui", 8, 8, 59, 59, m_pRenderer, SDL_FLIP_NONE);
+		AssetsManager::Instance()->draw(heroType[heroNum] + "_ui", 8, 8, 59, 59, m_pRenderer, SDL_FLIP_NONE);
 		AssetsManager::Instance()->draw("bar_outline", 105, 10, 221, 16, m_pRenderer, SDL_FLIP_NONE);
 		AssetsManager::Instance()->draw("bar_outline", 105, 30, 221, 16, m_pRenderer, SDL_FLIP_NONE);
 		AssetsManager::Instance()->draw("health_bar", 109, 15, 213, 8, m_pRenderer, SDL_FLIP_NONE);
@@ -322,7 +347,7 @@ void Game::handleEvents()
 			if (mousePos->m_x > button0.x && mousePos->m_x < button0.x + button0.w &&
 				mousePos->m_y > button0.y && mousePos->m_y < button0.y + button0.h)
 			{
-				state = GAME;
+				state = CHOOSEHERO;
 			}
 
 			if (mousePos->m_x > button1.x && mousePos->m_x < button1.x + button1.w &&
@@ -337,7 +362,31 @@ void Game::handleEvents()
 
 	if (state == CHOOSEHERO)
 	{
+		if (InputHandler::Instance()->getMouseButtonState(LEFT))
+		{
+			Vector2D* mousePos = InputHandler::Instance()->getMousePosition();
 
+			if (mousePos->m_x > button2.x && mousePos->m_x < button2.x + button2.w &&
+				mousePos->m_y > button2.y && mousePos->m_y < button2.y + button2.h)
+			{
+				p->type = heroType[heroNum];
+				state = GAME;
+			}
+
+			if (mousePos->m_x > button3.x && mousePos->m_x < button3.x + button3.w &&
+				mousePos->m_y > button3.y && mousePos->m_y < button3.y + button3.h)
+			{
+				if(heroNum < 3) heroNum++;
+			}
+
+			if (mousePos->m_x > button4.x && mousePos->m_x < button4.x + button4.w &&
+				mousePos->m_y > button4.y && mousePos->m_y < button4.y + button4.h)
+			{
+				if (heroNum > 0) heroNum--;
+			}
+
+			InputHandler::Instance()->reset(); //reset the buttons
+		}
 	}
 
 	if (state == GAME)
