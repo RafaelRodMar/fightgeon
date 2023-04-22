@@ -95,7 +95,8 @@
 	"strength_ui" : "ui/spr_strength_ui.png",
 	"strength_ui_alt" : "ui/spr_strength_ui_alt.png",
 	"thief_ui" : "ui/spr_thief_ui.png",
-	"warrior_ui" : "ui/spr_warrior_ui.png"
+	"warrior_ui" : "ui/spr_warrior_ui.png",
+	"torch" : "spr_torch.png"
     },
     "mus": {
         "music1": "msc_main_track_1.wav",

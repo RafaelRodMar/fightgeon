@@ -185,3 +185,13 @@ public:
 	void update();
 	void draw();
 };
+
+class Torch : public Entity {
+public:
+	Torch() {
+		m_name = "torch";
+	}
+
+	void update();
+	void draw();
+};

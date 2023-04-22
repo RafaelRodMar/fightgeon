@@ -541,6 +541,29 @@ void Game::populateLevel()
 		m_items.push_back(std::move(potion));
 		floorTiles.erase(floorTiles.begin() + r);
 	}
+
+	//set some torches
+	std::vector<Vector2D> wallTiles;
+	for (int j = 0; j < 19; j++) {
+		for (int i = 0; i < 19; i++) {
+			if (i > 0 && j > 0 && i < 18 && j < 18)
+			{
+				if (level[i][j] == 0 || level[i][j] == 10 || level[i][j] == 11)
+				{
+					wallTiles.push_back(Vector2D(j, i)); //inverted
+				}
+			}
+		}
+	}
+
+	for (int i = 0; i < 5; i++) {
+		r = rnd.getRndInt(0, wallTiles.size() - 1);
+		std::unique_ptr<Torch> torch = std::make_unique<Torch>();
+		torch->settings("torch", wallTiles[r] * 50, Vector2D(0, 0), 90 / 5, 36, 5, 0, 0, 0.0, 1);
+		torch->m_position += Vector2D(m_tileWidth / 2 - torch->m_width / 2, m_tileHeight / 2 - torch->m_height / 2);
+		m_items.push_back(std::move(torch));
+		wallTiles.erase(wallTiles.begin() + r);
+	}
 }
 
 //carve paths recursively to create a maze
