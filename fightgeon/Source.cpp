@@ -113,7 +113,7 @@ bool Game::init(const char* title, int xpos, int ypos, int width,
 	ReadHiScores();
 
 	//read level data from file (the data is not used in this game)
-	std::ifstream in("assets/data/level_data.txt");
+	/*std::ifstream in("assets/data/level_data.txt");
 	if (in.good())
 	{
 		std::string str;
@@ -133,7 +133,7 @@ bool Game::init(const char* title, int xpos, int ypos, int width,
 	else
 	{
 		std::cout << "Error loading level data" << std::endl;
-	}
+	}*/
 
 	//no change, red, green, yellow, magenta, cyan
 	SDL_Color colorList[6] = { {255,255,255}, {255,0,0}, {0,255,0}, {255,253,1}, {236,5,229}, {0,255,255} };
@@ -662,25 +662,25 @@ void Game::calculateTextures() {
 				int type = level[i][j];
 
 				//top
-				if ((level[i - 1][j] >= 0 && level[i - 1][j] <= 15) || level[i - 1][j] == 18)
+				if (i > 0 && ((level[i - 1][j] >= 0 && level[i - 1][j] <= 15) || level[i - 1][j] == 18))
 				{
 					value += 1;
 				}
 
 				//right
-				if ((level[i][j + 1] >= 0 && level[i][j + 1] <= 15) || level[i][j + 1] == 18)
+				if (j < 18 && ((level[i][j + 1] >= 0 && level[i][j + 1] <= 15) || level[i][j + 1] == 18))
 				{
 					value += 2;
 				}
 
 				//bottom
-				if ((level[i + 1][j] >= 0 && level[i + 1][j] <= 15) || level[i + 1][j] == 18)
+				if (i < 18 && ((level[i + 1][j] >= 0 && level[i + 1][j] <= 15) || level[i + 1][j] == 18))
 				{
 					value += 4;
 				}
 
 				//left
-				if ((level[i][j - 1] >= 0 && level[i][j - 1] <= 15) || level[i][j - 1] == 18)
+				if (j > 0 && ((level[i][j - 1] >= 0 && level[i][j - 1] <= 15) || level[i][j - 1] == 18))
 				{
 					value += 8;
 				}
