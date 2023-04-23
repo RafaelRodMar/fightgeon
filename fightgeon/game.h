@@ -10,6 +10,18 @@
 ////Game States
 enum GAMESTATES { MENU, CHOOSEHERO, GAME, ENDGAME };
 
+// Spawnable items.
+enum class ITEM {
+	HEART,
+	GEM,
+	GOLD_SMALL,
+	GOLD_MEDIUM,
+	GOLD_LARGE,
+	POTION,
+	KEY,
+	COUNT
+};
+
 // Tiles.
 enum class TILE {
 	WALL_SINGLE,
@@ -115,14 +127,17 @@ private:
 	std::vector<int> vhiscores;
 	int lives, score;
 
+	//map
 	SDL_Color colorMod;
 	int level[19][19];
 	void populateLevel();
+	int m_tileSize = 50;
 	int m_tileWidth = 50;
 	int m_tileHeight = 50;
 	void createPath(int columnIndex, int rowIndex);
 	void createRooms(int roomCount);
 	void calculateTextures();
+	void spawnItem(ITEM itemType, Vector2D position = { -1.f, -1.f });
 	int gemScore = 0;
 	int goldScore = 0;
 	

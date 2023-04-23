@@ -479,70 +479,39 @@ void Game::populateLevel()
 	}
 
 	//create a gem
-	std::unique_ptr<Gem> gem = std::make_unique<Gem>();
-
-	//set the gem settings
 	int r = rnd.getRndInt(0, floorTiles.size() - 1);
-	gem->settings("gem", floorTiles[r] * 50, Vector2D(0, 0), 168 / 8, 25, 8, 0, 0, 0.0, 1);
-	//center the position of the item in the tile
-	gem->m_position += Vector2D(m_tileWidth / 2 - gem->m_width / 2, m_tileHeight / 2 - gem->m_height / 2);
-	//add the gem to the collection of all objects. (need to use std::move for unique_ptr)
-	m_items.push_back(std::move(gem));
-
+	spawnItem(ITEM::GEM, floorTiles[r]);
 	floorTiles.erase(floorTiles.begin() + r); //so it can't be used again
 
 	//create a key
-	std::unique_ptr<Key> key = std::make_unique<Key>();
 	r = rnd.getRndInt(0, floorTiles.size() - 1);
-	key->settings("key", floorTiles[r] * 50, Vector2D(0, 0), 240 / 8, 24, 8, 0, 0, 0.0, 1);
-	key->m_position += Vector2D(m_tileWidth / 2 - key->m_width / 2, m_tileHeight / 2 - key->m_height / 2);
-	m_items.push_back(std::move(key));
+	spawnItem(ITEM::KEY, floorTiles[r]);
 	floorTiles.erase(floorTiles.begin() + r);
 
 	//create gold small
-	std::unique_ptr<Gold> gold = std::make_unique<Gold>();
 	r = rnd.getRndInt(0, floorTiles.size() - 1);
-	gold->settings("gold_small", floorTiles[r] * 50, Vector2D(0, 0), 96 / 8, 16, 8, 0, 0, 0.0, 1);
-	gold->m_position += Vector2D(m_tileWidth / 2 - gold->m_width / 2, m_tileHeight / 2 - gold->m_height / 2);
-	gold->amount = 20;
-	m_items.push_back(std::move(gold));
+	spawnItem(ITEM::GOLD_SMALL, floorTiles[r]);
 	floorTiles.erase(floorTiles.begin() + r);
 
 	//create gold medium
-	std::unique_ptr<Gold> goldmed = std::make_unique<Gold>();
 	r = rnd.getRndInt(0, floorTiles.size() - 1);
-	goldmed->settings("gold_medium", floorTiles[r] * 50, Vector2D(0, 0), 144 / 8, 19, 8, 0, 0, 0.0, 1);
-	goldmed->m_position += Vector2D(m_tileWidth / 2 - goldmed->m_width / 2, m_tileHeight / 2 - goldmed->m_height / 2);
-	goldmed->amount = 120;
-	m_items.push_back(std::move(goldmed));
+	spawnItem(ITEM::GOLD_MEDIUM, floorTiles[r]);
 	floorTiles.erase(floorTiles.begin() + r);
 
 	//create gold large
-	std::unique_ptr<Gold> goldlarge = std::make_unique<Gold>();
 	r = rnd.getRndInt(0, floorTiles.size() - 1);
-	goldlarge->settings("gold_large", floorTiles[r] * 50, Vector2D(0, 0), 192 / 8, 19, 8, 0, 0, 0.0, 1);
-	goldlarge->m_position += Vector2D(m_tileWidth / 2 - goldlarge->m_width / 2, m_tileHeight / 2 - goldlarge->m_height / 2);
-	goldlarge->amount = 220;
-	m_items.push_back(std::move(goldlarge));
+	spawnItem(ITEM::GOLD_LARGE, floorTiles[r]);
 	floorTiles.erase(floorTiles.begin() + r);
 
 	//create heart
-	std::unique_ptr<Heart> heart = std::make_unique<Heart>();
 	r = rnd.getRndInt(0, floorTiles.size() - 1);
-	heart->settings("heart", floorTiles[r] * 50, Vector2D(0, 0), 120 / 8, 22, 8, 0, 0, 0.0, 1);
-	heart->m_position += Vector2D(m_tileWidth / 2 - heart->m_width / 2, m_tileHeight / 2 - heart->m_height / 2);
-	m_items.push_back(std::move(heart));
+	spawnItem(ITEM::HEART, floorTiles[r]);
 	floorTiles.erase(floorTiles.begin() + r);
 
 	//create 3 potions
-	std::string potionNames[7] = { "potion_attack", "potion_defense", "potion_dexterity", "potion_health", "potion_mana", "potion_stamina", "potion_strength" };
 	for (int i = 0; i < 3; i++) {
-		int pName = rnd.getRndInt(0, 6);
-		std::unique_ptr<Potion> potion = std::make_unique<Potion>();
 		r = rnd.getRndInt(0, floorTiles.size() - 1);
-		potion->settings(potionNames[pName], floorTiles[r] * 50, Vector2D(0, 0), 120 / 8, 30, 8, 0, 0, 0.0, 1);
-		potion->m_position += Vector2D(m_tileWidth / 2 - potion->m_width / 2, m_tileHeight / 2 - potion->m_height / 2);
-		m_items.push_back(std::move(potion));
+		spawnItem(ITEM::POTION, floorTiles[r]);
 		floorTiles.erase(floorTiles.begin() + r);
 	}
 
@@ -693,6 +662,102 @@ void Game::calculateTextures() {
 				level[i][j] = value;
 			}
 		}
+	}
+}
+
+//position is optional, if it is -1.0f,-1.0f then a random location is used.
+void Game::spawnItem(ITEM itemType, Vector2D position)
+{
+	// Choose a random, unused spawn location.
+	Vector2D spawnLocation;
+	if ((position.m_x >= 0.f) || (position.m_y >= 0.f))
+	{
+		spawnLocation = position;
+	}
+	else
+	{
+		//get all floor tiles
+		std::vector<Vector2D> floorTiles;
+		for (int j = 0; j < 19; j++) {
+			for (int i = 0; i < 19; i++) {
+				if (isFloor(Vector2D(i, j)))
+				{
+					floorTiles.push_back(Vector2D(j, i)); //inverted
+				}
+			}
+		}
+
+		//choose one
+		spawnLocation = floorTiles[rnd.getRndInt(0, floorTiles.size() - 1)];
+	}
+	// Check which type of object is being spawned.
+	switch (itemType)
+	{
+	case ITEM::POTION:
+	{
+		std::string potionNames[7] = { "potion_attack", "potion_defense", "potion_dexterity", "potion_health", "potion_mana", "potion_stamina", "potion_strength" };
+		int pName = rnd.getRndInt(0, 6);
+		std::unique_ptr<Potion> item = std::make_unique<Potion>();
+		item->settings(potionNames[pName], spawnLocation * 50, Vector2D(0, 0), 120 / 8, 30, 8, 0, 0, 0.0, 1);
+		item->m_position += Vector2D(m_tileWidth / 2 - item->m_width / 2, m_tileHeight / 2 - item->m_height / 2);
+		m_items.push_back(std::move(item));
+		break;
+	}
+	case ITEM::GEM:
+	{
+		std::unique_ptr<Gem> item = std::make_unique<Gem>();
+		item->settings("gem", spawnLocation * 50, Vector2D(0, 0), 168 / 8, 25, 8, 0, 0, 0.0, 1);
+		//center the item in the tile
+		item->m_position += Vector2D(m_tileWidth / 2 - item->m_width / 2, m_tileHeight / 2 - item->m_height / 2);
+		// Add the item to the list of all items.
+		m_items.push_back(std::move(item));
+		break;
+	}
+	case ITEM::GOLD_SMALL:
+	{
+		std::unique_ptr<Gold> item = std::make_unique<Gold>();
+		item->settings("gold_small", spawnLocation * 50, Vector2D(0, 0), 96 / 8, 16, 8, 0, 0, 0.0, 1);
+		item->m_position += Vector2D(m_tileWidth / 2 - item->m_width / 2, m_tileHeight / 2 - item->m_height / 2);
+		item->amount = 20;
+		m_items.push_back(std::move(item));
+		break;
+	}
+	case ITEM::GOLD_MEDIUM:
+	{
+		std::unique_ptr<Gold> item = std::make_unique<Gold>();
+		item->settings("gold_medium", spawnLocation * 50, Vector2D(0, 0), 144 / 8, 19, 8, 0, 0, 0.0, 1);
+		item->m_position += Vector2D(m_tileWidth / 2 - item->m_width / 2, m_tileHeight / 2 - item->m_height / 2);
+		item->amount = 120;
+		m_items.push_back(std::move(item));
+		break;
+	}
+	case ITEM::GOLD_LARGE:
+	{
+		std::unique_ptr<Gold> item = std::make_unique<Gold>();
+		item->settings("gold_large", spawnLocation * 50, Vector2D(0, 0), 192 / 8, 19, 8, 0, 0, 0.0, 1);
+		item->m_position += Vector2D(m_tileWidth / 2 - item->m_width / 2, m_tileHeight / 2 - item->m_height / 2);
+		item->amount = 220;
+		m_items.push_back(std::move(item));
+		break;
+	}
+	case ITEM::KEY:
+	{
+		std::unique_ptr<Key> item = std::make_unique<Key>();
+		item->settings("key", spawnLocation * 50, Vector2D(0, 0), 240 / 8, 24, 8, 0, 0, 0.0, 1);
+		item->m_position += Vector2D(m_tileWidth / 2 - item->m_width / 2, m_tileHeight / 2 - item->m_height / 2);
+		m_items.push_back(std::move(item));
+		break;
+	}
+	case ITEM::HEART:
+	{
+		std::unique_ptr<Heart> item = std::make_unique<Heart>();
+		item->settings("heart", spawnLocation * 50, Vector2D(0, 0), 120 / 8, 22, 8, 0, 0, 0.0, 1);
+		item->m_position += Vector2D(m_tileWidth / 2 - item->m_width / 2, m_tileHeight / 2 - item->m_height / 2);
+		m_items.push_back(std::move(item));
+		break;
+	}
+	default:
+		break;
 	}
 }
 
