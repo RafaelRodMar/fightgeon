@@ -7,6 +7,9 @@
 #include "InputHandler.h"
 #include "Entity.h"
 
+static int const MAX_ITEM_SPAWN_COUNT = 50;
+static int const MAX_ENEMY_SPAWN_COUNT = 20;
+
 ////Game States
 enum GAMESTATES { MENU, CHOOSEHERO, GAME, ENDGAME };
 
@@ -21,6 +24,12 @@ enum class ITEM {
 	KEY,
 	COUNT
 };
+// Enemy types.
+enum class ENEMY {
+	SLIME,
+	HUMANOID,
+	COUNT
+};
 
 // Tiles.
 enum class TILE {
@@ -138,6 +147,7 @@ private:
 	void createRooms(int roomCount);
 	void calculateTextures();
 	void spawnItem(ITEM itemType, Vector2D position = { -1.f, -1.f });
+	void spawnEnemy(ENEMY enemyType, Vector2D position = { -1.f, -1.f });
 	int gemScore = 0;
 	int goldScore = 0;
 	
@@ -152,7 +162,7 @@ private:
 	bool isCollideRect(Entity *a, Entity *b);
 	//std::vector<GameObject*> m_gameObjects;
 	std::vector<std::unique_ptr<Entity>> m_items;
-	//std::vector<std::unique_ptr<Enemy>> m_enemies;
+	std::vector<std::unique_ptr<Enemy>> m_enemies;
 
 	bool m_bRunning;
 	int m_gameWidth;

@@ -276,6 +276,9 @@ void Game::render()
 		for (auto& i : m_items)
 			i->draw();
 
+		for (auto& i : m_enemies)
+			i->draw();
+
 		p->draw();
 
 		//ui
@@ -310,6 +313,8 @@ void Game::render()
 		AssetsManager::Instance()->Text(std::to_string(p->m_dexterity), "fontad", scw + 150, sh - 35, { 255,255,255,255 }, m_pRenderer);
 		AssetsManager::Instance()->draw("stamina_ui", scw + 210, sh - 40, 35, 35, m_pRenderer, SDL_FLIP_NONE);
 		AssetsManager::Instance()->Text(std::to_string(p->m_stamina), "fontad", scw + 270, sh - 35, { 255,255,255,255 }, m_pRenderer);
+
+		AssetsManager::Instance()->Text(std::to_string(m_enemies.size()), "fontad", 0, 0, { 255,255,255,255 }, m_pRenderer);
 	}
 
 	if (state == ENDGAME)
@@ -461,6 +466,9 @@ void Game::update()
 		for (auto& i : m_items)
 			i->update();
 
+		for (auto& i : m_enemies)
+			i->update();
+
 		p->update();
 	}
 
@@ -537,6 +545,12 @@ void Game::populateLevel()
 		m_items.push_back(std::move(torch));
 		wallTiles.erase(wallTiles.begin() + r);
 	}
+
+	//add some enemies
+	for (int i = 0; i < 5; i++)
+	{
+		spawnEnemy(static_cast<ENEMY>(rnd.getRndInt(0, static_cast<int>(ENEMY::COUNT) - 1)));
+	}
 }
 
 //carve paths recursively to create a maze
@@ -759,6 +773,59 @@ void Game::spawnItem(ITEM itemType, Vector2D position)
 	default:
 		break;
 	}
+}
+
+// Spawns a given number of enemies in the level.
+void Game::spawnEnemy(ENEMY enemyType, Vector2D position)
+{
+	// Spawn location of enemy.
+	Vector2D spawnLocation;
+	// Choose a random, unused spawn location.
+	if ((position.m_x >= 0.f) || (position.m_y >= 0.f))
+	{
+		spawnLocation = position;
+	}
+	else
+	{
+		//get all floor tiles
+		std::vector<Vector2D> floorTiles;
+		for (int j = 0; j < 19; j++) {
+			for (int i = 0; i < 19; i++) {
+				if (isFloor(Vector2D(i, j)))
+				{
+					floorTiles.push_back(Vector2D(j, i)); //inverted
+				}
+			}
+		}
+
+		//choose one
+		spawnLocation = floorTiles[rnd.getRndInt(0, floorTiles.size() - 1)];
+	}
+
+	// Create the enemy.
+	std::unique_ptr<Enemy> enemy;
+	switch (enemyType)
+	{
+	case ENEMY::SLIME:
+		enemy = std::make_unique<Slime>();
+		enemy->settings("slime_idle_down", spawnLocation * 50, Vector2D(0, 0), 33, 18, 1, 0, 0, 0.0, 1);
+		enemy->m_position += Vector2D(m_tileWidth / 2 - enemy->m_width / 2, m_tileHeight / 2 - enemy->m_height / 2);
+		break;
+	case ENEMY::HUMANOID:
+		enemy = std::make_unique<Humanoid>();
+		if (rnd.getRndInt(0, 1) == 0)
+		{
+			enemy->settings("goblin_idle_down", spawnLocation * 50, Vector2D(0, 0), 33, 33, 1, 0, 0, 0.0, 1);
+		}
+		else
+		{
+			enemy->settings("skeleton_idle_down", spawnLocation * 50, Vector2D(0, 0), 33, 33, 1, 0, 0, 0.0, 1);
+		}
+		enemy->m_position += Vector2D(m_tileWidth / 2 - enemy->m_width / 2, m_tileHeight / 2 - enemy->m_height / 2);
+		break;
+	}
+	// Add to list of all enemies.
+	m_enemies.push_back(std::move(enemy));
 }
 
 void Game::UpdateHiScores(int newscore)

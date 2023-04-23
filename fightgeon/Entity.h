@@ -133,6 +133,56 @@ public:
 
 };
 
+class Enemy : public Entity
+{
+public:
+	int m_health = 0;
+	int m_maxHealth = 0;
+	int m_mana = 0;
+	int m_maxMana = 0;
+	int m_attack = 0;
+	int m_defense = 0;
+	int m_strength = 0;
+	int m_dexterity = 0;
+	int m_stamina = 0;
+	std::string type = "";
+
+	Enemy()
+	{
+		m_name = "enemy";
+	}
+
+	void update();
+	void draw();
+
+};
+
+class Slime : public Enemy
+{
+public:
+
+	Slime()
+	{
+		m_name = "slime";
+	}
+
+	void update();
+	void draw();
+};
+
+class Humanoid : public Enemy
+{
+public:
+
+	Humanoid()
+	{
+		m_name = "humanoid";
+	}
+
+	void update();
+	void draw();
+};
+
 class Gem : public Entity {
 public:
 
