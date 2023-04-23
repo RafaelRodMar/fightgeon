@@ -110,6 +110,10 @@ bool Game::init(const char* title, int xpos, int ypos, int width,
 	AssetsManager::Instance()->loadAssetsJson(); //ahora con formato json
 	Mix_Volume(-1, 16); //adjust sound/music volume for all channels
 
+	SDL_Surface *surface = IMG_Load("assets/img/ui/spr_aim.png");
+	SDL_Cursor *cursor = SDL_CreateColorCursor(surface, 16, 16);
+	SDL_SetCursor(cursor);
+
 	ReadHiScores();
 
 	//read level data from file (the data is not used in this game)
