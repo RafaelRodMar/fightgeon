@@ -550,7 +550,8 @@ void Game::populateLevel()
 	for (int i = 0; i < 5; i++)
 	{
 		spawnEnemy(static_cast<ENEMY>(rnd.getRndInt(0, static_cast<int>(ENEMY::COUNT) - 1)));
-	}
+	}
+
 }
 
 //carve paths recursively to create a maze

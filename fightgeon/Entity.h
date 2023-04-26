@@ -120,11 +120,15 @@ public:
 	int m_strength = 0;
 	int m_dexterity = 0;
 	int m_stamina = 0;
+	PLAYER_CLASS m_class;
 	std::string type = "";
 
 	player()
 	{
 		m_name = "player";
+
+		// Generate a random class. Not used, i let the player choose the class.
+		//m_class = static_cast<PLAYER_CLASS>(std::rand() % static_cast<int>(PLAYER_CLASS::COUNT));
 	}
 
 	void update();

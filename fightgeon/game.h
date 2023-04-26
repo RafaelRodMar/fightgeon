@@ -23,6 +23,13 @@ enum class ITEM {
 	POTION,
 	KEY,
 	COUNT
+};// Player classes.
+enum class PLAYER_CLASS {
+	WARRIOR,
+	MAGE,
+	ARCHER,
+	THIEF,
+	COUNT
 };
 // Enemy types.
 enum class ENEMY {
@@ -60,7 +67,7 @@ enum class TILE {
 
 //the map is in the format row,column.
 struct Tile {
-	TILE type;
+	TILE type;  //don't forget to make possible alternative sprites for the same tile (floor, floor_alt)
 	int columnIndex;
 	int rowIndex;
 	SDL_Texture* texture;
