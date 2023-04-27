@@ -185,6 +185,7 @@ bool Game::init(const char* title, int xpos, int ypos, int width,
 	p->settings("warrior_idle_down", Vector2D(50,50), Vector2D(0, 0), 33, 33, 1, 0, 0, 0.0, 1);
 	p->m_position += Vector2D(m_tileWidth / 2 - p->m_width / 2, m_tileHeight / 2 - p->m_height / 2);
 	p->type = "warrior"; //default character
+	p->m_class = PLAYER_CLASS::WARRIOR;
 
 	//set the stats
 	int m_statPoints = 50;
@@ -313,8 +314,6 @@ void Game::render()
 		AssetsManager::Instance()->Text(std::to_string(p->m_dexterity), "fontad", scw + 150, sh - 35, { 255,255,255,255 }, m_pRenderer);
 		AssetsManager::Instance()->draw("stamina_ui", scw + 210, sh - 40, 35, 35, m_pRenderer, SDL_FLIP_NONE);
 		AssetsManager::Instance()->Text(std::to_string(p->m_stamina), "fontad", scw + 270, sh - 35, { 255,255,255,255 }, m_pRenderer);
-
-		AssetsManager::Instance()->Text(std::to_string(m_enemies.size()), "fontad", 0, 0, { 255,255,255,255 }, m_pRenderer);
 	}
 
 	if (state == ENDGAME)

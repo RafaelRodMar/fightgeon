@@ -23,14 +23,17 @@ enum class ITEM {
 	POTION,
 	KEY,
 	COUNT
-};// Player classes.
+};
+
+// Player classes.
 enum class PLAYER_CLASS {
 	WARRIOR,
 	MAGE,
 	ARCHER,
 	THIEF,
 	COUNT
-};
+};
+
 // Enemy types.
 enum class ENEMY {
 	SLIME,

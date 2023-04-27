@@ -5,6 +5,7 @@
 #include "AssetsManager.h"
 
 class Game;
+enum class PLAYER_CLASS;
 
 class Entity
 {
@@ -134,7 +135,8 @@ public:
 	void update();
 	void handleEvents();
 	void draw();
-
+	// Returns the player's class.
+	PLAYER_CLASS getClass() const {	return m_class;	}
 };
 
 class Enemy : public Entity
@@ -193,9 +195,6 @@ public:
 	Gem() {
 		m_name = "gem";
 	}
-
-	void update();
-	void draw();
 };
 
 class Key : public Entity {
@@ -203,9 +202,6 @@ public:
 	Key() {
 		m_name = "key";
 	}
-
-	void update();
-	void draw();
 };
 
 class Gold : public Entity {
@@ -215,9 +211,6 @@ public:
 	Gold() {
 		m_name = "gold";
 	}
-
-	void update();
-	void draw();
 };
 
 class Heart : public Entity {
@@ -225,9 +218,6 @@ public:
 	Heart() {
 		m_name = "heart";
 	}
-
-	void update();
-	void draw();
 };
 
 class Potion : public Entity {
@@ -235,9 +225,6 @@ public:
 	Potion() {
 		m_name = "potion";
 	}
-
-	void update();
-	void draw();
 };
 
 class Torch : public Entity {
@@ -245,7 +232,11 @@ public:
 	Torch() {
 		m_name = "torch";
 	}
+};
 
-	void update();
-	void draw();
+class Projectile : public Entity {
+public:
+	Projectile() {
+		m_name = "projectile";
+	}
 };
