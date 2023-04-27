@@ -62,10 +62,26 @@ void player::configure()
 	m_position += Vector2D(Game::Instance()->getTileWidth() / 2 - m_width / 2, Game::Instance()->getTileHeight() / 2 - m_height / 2);
 	m_class = static_cast<PLAYER_CLASS>(static_cast<int>(Game::Instance()->getHeroNum()));
 
-	if (m_textureID == "warrior") projectileID = "sword";
-	if (m_textureID == "mage") projectileID = "magic_ball";
-	if (m_textureID == "archer") projectileID = "arrow";
-	if (m_textureID == "thief") projectileID = "dagger";
+	// Set class-specific variables.
+	switch (m_class)
+	{
+	case PLAYER_CLASS::WARRIOR:
+		m_strength += std::rand() % 6 + 5;
+		projectileID = "sword";
+		break;
+	case PLAYER_CLASS::MAGE:
+		m_defense = std::rand() % 6 + 5;
+		projectileID = "magic_ball";
+		break;
+	case PLAYER_CLASS::ARCHER:
+		m_dexterity = std::rand() % 6 + 5;
+		projectileID = "arrow";
+		break;
+	case PLAYER_CLASS::THIEF:
+		m_stamina = std::rand() % 6 + 5;
+		projectileID = "dagger";
+		break;
+	}
 
 	//set the stats
 	int m_statPoints = 50;
