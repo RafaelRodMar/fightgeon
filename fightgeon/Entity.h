@@ -123,6 +123,7 @@ public:
 	int m_stamina = 0;
 	PLAYER_CLASS m_class;
 	std::string type = "";
+	std::string projectileID = "";
 
 	player()
 	{
@@ -132,9 +133,12 @@ public:
 		//m_class = static_cast<PLAYER_CLASS>(std::rand() % static_cast<int>(PLAYER_CLASS::COUNT));
 	}
 
+	void configure();
+
 	void update();
 	void handleEvents();
 	void draw();
+
 	// Returns the player's class.
 	PLAYER_CLASS getClass() const {	return m_class;	}
 };

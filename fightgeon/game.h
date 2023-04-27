@@ -109,6 +109,8 @@ public:
 	int getGameHeight() const { return m_gameHeight; }
 	int getTileWidth() const { return m_tileWidth; }
 	int getTileHeight() const { return m_tileHeight; }
+	std::string getHeroType() const { return heroType[heroNum]; }
+	int getHeroNum() const { return heroNum; }
 	bool isFloor(Vector2D v) {
 		if (level[(int)v.m_x][(int)v.m_y] == 19) return true;
 		if (level[(int)v.m_x][(int)v.m_y] == 20) return true;
@@ -133,7 +135,7 @@ private:
 
 	//choose hero
 	int heroNum = 0;
-	std::string heroType[4] = { "archer", "thief", "warrior", "mage" };
+	std::string heroType[4] = { "warrior", "mage", "archer", "thief" };
 	SDL_Rect button2;
 	Uint8 r2, g2, b2, a2;
 	SDL_Rect button3;

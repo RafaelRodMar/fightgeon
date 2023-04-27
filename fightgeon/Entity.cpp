@@ -54,6 +54,36 @@ void bullet::draw()
 		m_currentRow, m_currentFrame, Game::Instance()->getRenderer(), m_angle+90, m_alpha, SDL_FLIP_NONE);
 }
 
+void player::configure()
+{
+	m_textureID = Game::Instance()->getHeroType();
+	type = m_textureID;
+	settings(m_textureID + "_idle_down", Vector2D(50, 50), Vector2D(0, 0), 33, 33, 1, 0, 0, 0.0, 1);
+	m_position += Vector2D(Game::Instance()->getTileWidth() / 2 - m_width / 2, Game::Instance()->getTileHeight() / 2 - m_height / 2);
+	m_class = static_cast<PLAYER_CLASS>(static_cast<int>(Game::Instance()->getHeroNum()));
+
+	if (m_textureID == "warrior") projectileID = "sword";
+	if (m_textureID == "mage") projectileID = "magic_ball";
+	if (m_textureID == "archer") projectileID = "arrow";
+	if (m_textureID == "thief") projectileID = "dagger";
+
+	//set the stats
+	int m_statPoints = 50;
+	float attackBias = rand() % 101;
+	float defenseBias = rand() % 101;
+	float strengthBias = rand() % 101;
+	float dexterityBias = rand() % 101;
+	float staminaBias = rand() % 101;
+
+	float total = attackBias + defenseBias + strengthBias + dexterityBias + staminaBias;
+
+	m_attack += m_statPoints * (attackBias / total);
+	m_defense += m_statPoints * (defenseBias / total);
+	m_strength += m_statPoints * (strengthBias / total);
+	m_dexterity += m_statPoints * (dexterityBias / total);
+	m_stamina += m_statPoints * (staminaBias / total);
+}
+
 void player::update()
 {
 	m_position += m_velocity;

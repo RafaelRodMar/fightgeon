@@ -182,26 +182,6 @@ bool Game::init(const char* title, int xpos, int ypos, int width,
 
 	//create player
 	p = std::make_unique<player>();
-	p->settings("warrior_idle_down", Vector2D(50,50), Vector2D(0, 0), 33, 33, 1, 0, 0, 0.0, 1);
-	p->m_position += Vector2D(m_tileWidth / 2 - p->m_width / 2, m_tileHeight / 2 - p->m_height / 2);
-	p->type = "warrior"; //default character
-	p->m_class = PLAYER_CLASS::WARRIOR;
-
-	//set the stats
-	int m_statPoints = 50;
-	float attackBias = rnd.getRndInt(0, 100);
-	float defenseBias = rnd.getRndInt(0, 100);
-	float strengthBias = rnd.getRndInt(0, 100);
-	float dexterityBias = rnd.getRndInt(0, 100);
-	float staminaBias = rnd.getRndInt(0, 100);
-
-	float total = attackBias + defenseBias + strengthBias + dexterityBias + staminaBias;
-
-	p->m_attack += m_statPoints * (attackBias / total);
-	p->m_defense += m_statPoints * (defenseBias / total);
-	p->m_strength += m_statPoints * (strengthBias / total);
-	p->m_dexterity += m_statPoints * (dexterityBias / total);
-	p->m_stamina += m_statPoints * (staminaBias / total);
 
 	//menu init
 	button0 = { 0,0,100,100 };
@@ -377,7 +357,7 @@ void Game::handleEvents()
 			if (mousePos->m_x > button2.x && mousePos->m_x < button2.x + button2.w &&
 				mousePos->m_y > button2.y && mousePos->m_y < button2.y + button2.h)
 			{
-				p->type = heroType[heroNum];
+				p->configure();
 				state = GAME;
 			}
 
