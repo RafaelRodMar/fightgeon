@@ -1,3 +1,4 @@
+#include<random>
 #include "Entity.h"
 #include "game.h"
 
@@ -81,6 +82,35 @@ void player::configure()
 		m_stamina = std::rand() % 6 + 5;
 		projectileID = "dagger";
 		break;
+	}
+
+	// give player two traits, a boost to two properties.
+	std::vector<int> v(PLAYER_TRAIT_COUNT);
+	std::iota(std::begin(v), std::end(v), 0); //fill with 0,1,2,3,4...
+	auto rng = std::default_random_engine{};
+	std::shuffle(std::begin(v), std::end(v), rng);
+
+	//now simply get the two first elements of the vector
+	for (int i = 0; i < PLAYER_TRAIT_COUNT;i++) {
+		switch (v[i]) {
+		case static_cast<int>(PLAYER_TRAIT::ATTACK):
+			m_attack += rand() % 6 + 5;
+			break;
+		case static_cast<int>(PLAYER_TRAIT::DEFENSE):
+			m_defense += rand() % 6 + 5;
+			break;
+		case static_cast<int>(PLAYER_TRAIT::STRENGTH):
+			m_strength += rand() % 6 + 5;
+			break;
+		case static_cast<int>(PLAYER_TRAIT::DEXTERITY):
+			m_dexterity += rand() % 6 + 5;
+			break;
+		case static_cast<int>(PLAYER_TRAIT::STAMINA):
+			m_stamina += rand() % 6 + 5;
+			break;
+		default:
+			break;
+		}
 	}
 
 	//set the stats

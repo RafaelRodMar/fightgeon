@@ -7,8 +7,9 @@
 #include "InputHandler.h"
 #include "Entity.h"
 
-static int const MAX_ITEM_SPAWN_COUNT = 50;
-static int const MAX_ENEMY_SPAWN_COUNT = 20;
+static const int MAX_ITEM_SPAWN_COUNT = 50;
+static const int MAX_ENEMY_SPAWN_COUNT = 20;
+static const int PLAYER_TRAIT_COUNT = 2;
 
 ////Game States
 enum GAMESTATES { MENU, CHOOSEHERO, GAME, ENDGAME };
@@ -38,6 +39,16 @@ enum class PLAYER_CLASS {
 enum class ENEMY {
 	SLIME,
 	HUMANOID,
+	COUNT
+};
+
+// Player traits.
+enum class PLAYER_TRAIT {
+	ATTACK,
+	DEFENSE,
+	STRENGTH,
+	DEXTERITY,
+	STAMINA,
 	COUNT
 };
 
