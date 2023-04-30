@@ -790,16 +790,19 @@ void Game::spawnEnemy(ENEMY enemyType, Vector2D position)
 		enemy = std::make_unique<Slime>();
 		enemy->settings("slime_idle_down", spawnLocation * 50, Vector2D(0, 0), 33, 18, 1, 0, 0, 0.0, 1);
 		enemy->m_position += Vector2D(m_tileWidth / 2 - enemy->m_width / 2, m_tileHeight / 2 - enemy->m_height / 2);
+		enemy->type = "slime";
 		break;
 	case ENEMY::HUMANOID:
 		enemy = std::make_unique<Humanoid>();
 		if (rnd.getRndInt(0, 1) == 0)
 		{
 			enemy->settings("goblin_idle_down", spawnLocation * 50, Vector2D(0, 0), 33, 33, 1, 0, 0, 0.0, 1);
+			enemy->type = "goblin";
 		}
 		else
 		{
 			enemy->settings("skeleton_idle_down", spawnLocation * 50, Vector2D(0, 0), 33, 33, 1, 0, 0, 0.0, 1);
+			enemy->type = "skeleton";
 		}
 		enemy->m_position += Vector2D(m_tileWidth / 2 - enemy->m_width / 2, m_tileHeight / 2 - enemy->m_height / 2);
 		break;

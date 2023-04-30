@@ -175,9 +175,6 @@ public:
 	{
 		m_name = "slime";
 	}
-
-	void update();
-	void draw();
 };
 
 class Humanoid : public Enemy
@@ -188,9 +185,6 @@ public:
 	{
 		m_name = "humanoid";
 	}
-
-	void update();
-	void draw();
 };
 
 class Gem : public Entity {

@@ -254,25 +254,3 @@ void Enemy::draw()
 	AssetsManager::Instance()->drawFrame(m_textureID, m_position.m_x, m_position.m_y, m_width, m_height,
 		m_currentRow, m_currentFrame, Game::Instance()->getRenderer(), m_angle, m_alpha, SDL_FLIP_NONE);
 }
-
-void Slime::update()
-{
-	m_currentFrame = int(((SDL_GetTicks() / (100)) % m_numFrames));
-}
-
-void Slime::draw()
-{
-	AssetsManager::Instance()->drawFrame(m_textureID, m_position.m_x, m_position.m_y, m_width, m_height,
-		m_currentRow, m_currentFrame, Game::Instance()->getRenderer(), m_angle, m_alpha, SDL_FLIP_NONE);
-}
-
-void Humanoid::update()
-{
-	m_currentFrame = int(((SDL_GetTicks() / (100)) % m_numFrames));
-}
-
-void Humanoid::draw()
-{
-	AssetsManager::Instance()->drawFrame(m_textureID, m_position.m_x, m_position.m_y, m_width, m_height,
-		m_currentRow, m_currentFrame, Game::Instance()->getRenderer(), m_angle, m_alpha, SDL_FLIP_NONE);
-}

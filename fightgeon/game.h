@@ -42,6 +42,13 @@ enum class ENEMY {
 	COUNT
 };
 
+// Enemy humanoid types.
+enum class HUMANOID {
+	GOBLIN,
+	SKELETON,
+	COUNT
+};
+
 // Player traits.
 enum class PLAYER_TRAIT {
 	ATTACK,
