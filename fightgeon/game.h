@@ -26,6 +26,18 @@ enum class ITEM {
 	COUNT
 };
 
+// Potions
+enum class POTION {
+	ATTACK,
+	DEFENSE,
+	STRENGTH,
+	DEXTERITY,
+	STAMINA,
+	HEALTH,
+	MANA,
+	COUNT
+};
+
 // Player classes.
 enum class PLAYER_CLASS {
 	WARRIOR,

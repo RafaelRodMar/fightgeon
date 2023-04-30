@@ -6,6 +6,7 @@
 
 class Game;
 enum class PLAYER_CLASS;
+enum class POTION;
 
 class Entity
 {
@@ -189,6 +190,7 @@ public:
 
 class Gem : public Entity {
 public:
+	int m_scoreValue = 0;
 
 	Gem() {
 		m_name = "gem";
@@ -213,6 +215,8 @@ public:
 
 class Heart : public Entity {
 public:
+	int m_health = 0;
+
 	Heart() {
 		m_name = "heart";
 	}
@@ -220,6 +224,9 @@ public:
 
 class Potion : public Entity {
 public:
+	int m_statBoost = 0;
+	POTION m_type;
+
 	Potion() {
 		m_name = "potion";
 	}

@@ -690,10 +690,12 @@ void Game::spawnItem(ITEM itemType, Vector2D position)
 	case ITEM::POTION:
 	{
 		std::string potionNames[7] = { "potion_attack", "potion_defense", "potion_dexterity", "potion_health", "potion_mana", "potion_stamina", "potion_strength" };
-		int pName = rnd.getRndInt(0, 6);
+		int pName = rnd.getRndInt(0, static_cast<int>(POTION::COUNT));
 		std::unique_ptr<Potion> item = std::make_unique<Potion>();
 		item->settings(potionNames[pName], spawnLocation * 50, Vector2D(0, 0), 120 / 8, 30, 8, 0, 0, 0.0, 1);
 		item->m_position += Vector2D(m_tileWidth / 2 - item->m_width / 2, m_tileHeight / 2 - item->m_height / 2);
+		item->m_statBoost = rnd.getRndInt(0, 10) + 5;
+		item->m_type = static_cast<POTION>(pName);
 		m_items.push_back(std::move(item));
 		break;
 	}
@@ -703,6 +705,7 @@ void Game::spawnItem(ITEM itemType, Vector2D position)
 		item->settings("gem", spawnLocation * 50, Vector2D(0, 0), 168 / 8, 25, 8, 0, 0, 0.0, 1);
 		//center the item in the tile
 		item->m_position += Vector2D(m_tileWidth / 2 - item->m_width / 2, m_tileHeight / 2 - item->m_height / 2);
+		item->m_scoreValue = rnd.getRndInt(0, 100);
 		// Add the item to the list of all items.
 		m_items.push_back(std::move(item));
 		break;
@@ -747,6 +750,7 @@ void Game::spawnItem(ITEM itemType, Vector2D position)
 		std::unique_ptr<Heart> item = std::make_unique<Heart>();
 		item->settings("heart", spawnLocation * 50, Vector2D(0, 0), 120 / 8, 22, 8, 0, 0, 0.0, 1);
 		item->m_position += Vector2D(m_tileWidth / 2 - item->m_width / 2, m_tileHeight / 2 - item->m_height / 2);
+		item->m_health = rnd.getRndInt(0, 10) + 10;
 		m_items.push_back(std::move(item));
 		break;
 	}
