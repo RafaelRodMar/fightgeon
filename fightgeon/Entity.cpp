@@ -261,3 +261,39 @@ void Slime::draw()
 	AssetsManager::Instance()->drawFrameSc(m_textureID, m_position.m_x, m_position.m_y, m_width, m_height, m_scale, 
 		m_currentRow, m_currentFrame, Game::Instance()->getRenderer(), m_angle, m_alpha, SDL_FLIP_NONE);
 }
+
+void Humanoid::draw()
+{
+	AssetsManager::Instance()->drawFrameSc(m_textureID, m_position.m_x, m_position.m_y, m_width, m_height, m_scale,
+		m_currentRow, m_currentFrame, Game::Instance()->getRenderer(), m_angle, m_alpha, SDL_FLIP_NONE);
+
+	if (m_hasHelmet >= 0) {
+		SDL_Color c;
+		if (m_hasHelmet == 0) c = { 110, 55, 28, 255 }; //bronze
+		if (m_hasHelmet == 1) c = { 209, 208, 201, 255 }; //silver
+		if (m_hasHelmet == 2) c = { 229, 192, 21, 255 }; //gold
+		SDL_SetTextureColorMod(AssetsManager::Instance()->getTexture("helmet_idle_front"), c.r, c.g, c.b);
+		AssetsManager::Instance()->drawFrameSc("helmet_idle_front", m_position.m_x, m_position.m_y, m_width, m_height, m_scale,
+			m_currentRow, m_currentFrame, Game::Instance()->getRenderer(), m_angle, m_alpha, SDL_FLIP_NONE);
+	}
+
+	if (m_hasTorso >= 0) {
+		SDL_Color c;
+		if (m_hasTorso == 0) c = { 110, 55, 28, 255 }; //bronze
+		if (m_hasTorso == 1) c = { 209, 208, 201, 255 }; //silver
+		if (m_hasTorso == 2) c = { 229, 192, 21, 255 }; //gold
+		SDL_SetTextureColorMod(AssetsManager::Instance()->getTexture("torso_idle_front"), c.r, c.g, c.b);
+		AssetsManager::Instance()->drawFrameSc("torso_idle_front", m_position.m_x, m_position.m_y, m_width, m_height, m_scale,
+			m_currentRow, m_currentFrame, Game::Instance()->getRenderer(), m_angle, m_alpha, SDL_FLIP_NONE);
+	}
+
+	if (m_hasLegs >= 0) {
+		SDL_Color c;
+		if (m_hasLegs == 0) c = { 110, 55, 28, 255 }; //bronze
+		if (m_hasLegs == 1) c = { 209, 208, 201, 255 }; //silver
+		if (m_hasLegs == 2) c = { 229, 192, 21, 255 }; //gold
+		SDL_SetTextureColorMod(AssetsManager::Instance()->getTexture("legs_idle_front"), c.r, c.g, c.b);
+		AssetsManager::Instance()->drawFrameSc("legs_idle_front", m_position.m_x, m_position.m_y, m_width, m_height, m_scale,
+			m_currentRow, m_currentFrame, Game::Instance()->getRenderer(), m_angle, m_alpha, SDL_FLIP_NONE);
+	}
+}

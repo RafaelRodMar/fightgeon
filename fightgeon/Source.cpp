@@ -814,6 +814,32 @@ void Game::spawnEnemy(ENEMY enemyType, Vector2D position)
 			enemy->type = "skeleton";
 		}
 		enemy->m_position += Vector2D(m_tileWidth / 2 - enemy->m_width / 2, m_tileHeight / 2 - enemy->m_height / 2);
+
+		//randomly set armor parts with a 20% probability.
+		if (rand() % 5 == 0)
+		{
+			int tierValue = std::rand() % 100 + 1;
+			// Select which tier armor should be created.
+			if (tierValue < 51) { enemy->m_hasHelmet = 0; }  //50% bronze
+			else if (tierValue < 86) { enemy->m_hasHelmet = 1; }  //35% silver
+			else { enemy->m_hasHelmet = 2; }  //15% gold
+		}
+		if (rand() % 5 == 0)
+		{
+			int tierValue = std::rand() % 100 + 1;
+			// Select which tier armor should be created.
+			if (tierValue < 51) { enemy->m_hasTorso = 0; }  //50% bronze
+			else if (tierValue < 86) { enemy->m_hasTorso = 1; }  //35% silver
+			else { enemy->m_hasTorso = 2; }  //15% gold
+		}
+		if (rand() % 5 == 0)
+		{
+			int tierValue = std::rand() % 100 + 1;
+			// Select which tier armor should be created.
+			if (tierValue < 51) { enemy->m_hasLegs = 0; }  //50% bronze
+			else if (tierValue < 86) { enemy->m_hasLegs = 1; }  //35% silver
+			else { enemy->m_hasLegs = 2; }  //15% gold
+		}
 		break;
 	}
 	// Add to list of all enemies.

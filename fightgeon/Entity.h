@@ -160,6 +160,11 @@ public:
 	SDL_Color m_color = { 0,255,0,0 };
 	float m_scale = 1;
 
+	//armor
+	int m_hasHelmet = -1;
+	int m_hasTorso = -1;
+	int m_hasLegs = -1;
+
 	Enemy()
 	{
 		m_name = "enemy";
@@ -190,6 +195,8 @@ public:
 	{
 		m_name = "humanoid";
 	}
+
+	void draw();
 };
 
 class Gem : public Entity {

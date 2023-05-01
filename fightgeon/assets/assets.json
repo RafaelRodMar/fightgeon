@@ -124,7 +124,19 @@
 	"arrow" : "projectiles/spr_arrow.png",
 	"dagger" : "projectiles/spr_dagger.png",
 	"magic_ball" : "projectiles/spr_magic_ball.png",
-	"sword" : "projectiles/spr_sword.png"
+	"sword" : "projectiles/spr_sword.png",
+	"helmet_idle_front" : "armor/helmet/spr_helmet_idle_front.png",
+	"helmet_idle_side" : "armor/helmet/spr_helmet_idle_side.png",
+	"helmet_walk_front" : "armor/helmet/spr_helmet_walk_front.png",
+	"helmet_walk_side" : "armor/helmet/spr_helmet_walk_side.png",
+	"legs_idle_front" : "armor/legs/spr_legs_idle_front.png",
+	"legs_idle_side" : "armor/legs/spr_legs_idle_side.png",
+	"legs_walk_front" : "armor/legs/spr_legs_walk_front.png",
+	"legs_walk_side" : "armor/legs/spr_legs_walk_side.png",
+	"torso_idle_front" : "armor/torso/spr_torso_idle_front.png",
+	"torso_idle_side" : "armor/torso/spr_torso_idle_side.png",
+	"torso_walk_front" : "armor/torso/spr_torso_walk_front.png",
+	"torso_walk_side" : "armor/torso/spr_torso_walk_side.png"
     },
     "mus": {
         "music1": "msc_main_track_1.wav",
