@@ -82,6 +82,54 @@ void AssetsManager::applyColorMod(string id, int r, int g, int b) {
 	SDL_SetTextureColorMod(m_textureMap[id], r, g, b);
 }
 
+SDL_Color AssetsManager::getColorFromInt(int colorNum) {
+	if (colorNum == 0) return getColorFromString("black");
+	if (colorNum == 1) return getColorFromString("white");
+	if (colorNum == 2) return getColorFromString("red");
+	if (colorNum == 3) return getColorFromString("green");
+	if (colorNum == 4) return getColorFromString("blue");
+	if (colorNum == 5) return getColorFromString("yellow");
+	if (colorNum == 6) return getColorFromString("magenta");
+	if (colorNum == 7) return getColorFromString("cyan");
+	return { 0,0,0,255 };
+}
+
+SDL_Color AssetsManager::getColorFromString(std::string colorName) {
+	// Convert the color name to lowercase to simplify comparison
+	std::transform(colorName.begin(), colorName.end(), colorName.begin(), ::tolower);
+
+	// Map color names to corresponding SDL_Color values
+	if (colorName == "red") {
+		return { 255, 0, 0, 255 };
+	}
+	else if (colorName == "green") {
+		return { 0, 255, 0, 255 };
+	}
+	else if (colorName == "blue") {
+		return { 0, 0, 255, 255 };
+	}
+	else if (colorName == "white") {
+		return { 255, 255, 255, 255 };
+	}
+	else if (colorName == "black") {
+		return { 0, 0, 0, 255 };
+	}
+	else if (colorName == "yellow") {
+		return { 255,253,1,255 };
+	}
+	else if (colorName == "magenta") {
+		return { 236,5,229,255 };
+	}
+	else if (colorName == "cyan") {
+		return { 0,255,255,255 };
+	}
+	else {
+		// Default to black if an unknown color name is provided
+		std::cout << "Unknown color name: " << colorName << std::endl;
+		return { 0, 0, 0, 255 };
+	}
+}
+
 void AssetsManager::clearFromTextureMap(string id)
 {
 	m_textureMap.erase(id);

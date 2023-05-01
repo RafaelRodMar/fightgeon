@@ -11,6 +11,20 @@ static const int MAX_ITEM_SPAWN_COUNT = 50;
 static const int MAX_ENEMY_SPAWN_COUNT = 20;
 static const int PLAYER_TRAIT_COUNT = 2;
 
+// colors
+enum class COLOR {
+	BLACK,
+	WHITE,
+	RED,
+	GREEN,
+	BLUE,
+	YELLOW,
+	MAGENTA,
+	CYAN,
+	TRANSPARENT,
+	COUNT
+};
+
 ////Game States
 enum GAMESTATES { MENU, CHOOSEHERO, GAME, ENDGAME };
 

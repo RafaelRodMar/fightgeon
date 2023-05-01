@@ -157,6 +157,7 @@ public:
 	int m_dexterity = 0;
 	int m_stamina = 0;
 	std::string type = "";
+	SDL_Color m_color = { 0,255,0,0 };
 
 	Enemy()
 	{
@@ -176,6 +177,8 @@ public:
 	{
 		m_name = "slime";
 	}
+
+	void draw();
 };
 
 class Humanoid : public Enemy

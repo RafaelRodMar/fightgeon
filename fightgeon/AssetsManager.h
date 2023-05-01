@@ -54,6 +54,9 @@ public:
 	void drawTile(std::string id, int margin, int spacing, int x, int y, int width, int height, int currentRow, int currentFrame, SDL_Renderer *pRenderer);
 
 	void applyColorMod(std::string id, int r, int g, int b);
+	SDL_Color getColorFromString(std::string colorName);
+	SDL_Color getColorFromInt(int colorNum);
+	SDL_Texture* getTexture(std::string text) { return m_textureMap[text]; };
 
 	void clearFromTextureMap(string id); //delete SDL_Texture from the map
 

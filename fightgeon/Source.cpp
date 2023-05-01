@@ -690,7 +690,7 @@ void Game::spawnItem(ITEM itemType, Vector2D position)
 	case ITEM::POTION:
 	{
 		std::string potionNames[7] = { "potion_attack", "potion_defense", "potion_dexterity", "potion_health", "potion_mana", "potion_stamina", "potion_strength" };
-		int pName = rnd.getRndInt(0, static_cast<int>(POTION::COUNT));
+		int pName = rnd.getRndInt(0, static_cast<int>(POTION::COUNT)-1);
 		std::unique_ptr<Potion> item = std::make_unique<Potion>();
 		item->settings(potionNames[pName], spawnLocation * 50, Vector2D(0, 0), 120 / 8, 30, 8, 0, 0, 0.0, 1);
 		item->m_position += Vector2D(m_tileWidth / 2 - item->m_width / 2, m_tileHeight / 2 - item->m_height / 2);
@@ -795,6 +795,7 @@ void Game::spawnEnemy(ENEMY enemyType, Vector2D position)
 		enemy->settings("slime_idle_down", spawnLocation * 50, Vector2D(0, 0), 33, 18, 1, 0, 0, 0.0, 1);
 		enemy->m_position += Vector2D(m_tileWidth / 2 - enemy->m_width / 2, m_tileHeight / 2 - enemy->m_height / 2);
 		enemy->type = "slime";
+		enemy->m_color = AssetsManager::Instance()->getColorFromInt(std::rand() % static_cast<int>(COLOR::COUNT));
 		break;
 	case ENEMY::HUMANOID:
 		enemy = std::make_unique<Humanoid>();
