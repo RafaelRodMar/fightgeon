@@ -51,6 +51,10 @@ public:
 	void drawFrame(string id, int x, int y, int width, int height,
 		int currentRow, int currentFrame, SDL_Renderer* pRenderer, double angle, int alpha, SDL_RendererFlip flip = SDL_FLIP_NONE); //draw image sprite
 
+	//draw frame with scale
+	void drawFrameSc(string id, int x, int y, int width, int height, float scale, 
+		int currentRow, int currentFrame, SDL_Renderer* pRenderer, double angle, int alpha, SDL_RendererFlip flip = SDL_FLIP_NONE); //draw image sprite
+
 	void drawTile(std::string id, int margin, int spacing, int x, int y, int width, int height, int currentRow, int currentFrame, SDL_Renderer *pRenderer);
 
 	void applyColorMod(std::string id, int r, int g, int b);

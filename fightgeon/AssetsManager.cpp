@@ -64,6 +64,24 @@ void AssetsManager::drawFrame(std::string id, int x, int y, int width, int heigh
 	SDL_RenderCopyEx(pRenderer, m_textureMap[id], &srcRect, &destRect, angle, 0, flip); //Load current frame on the buffer game.
 }
 
+void AssetsManager::drawFrameSc(string id, int x, int y, int width, int height, float scale, int currentRow, int currentFrame, SDL_Renderer * pRenderer, double angle, int alpha, SDL_RendererFlip flip)
+{
+	SDL_Rect srcRect; //source rectangle
+	SDL_Rect destRect; //destination rectangle
+
+	srcRect.x = width * currentFrame;
+	srcRect.y = height * (currentRow);
+	srcRect.w = width;
+	srcRect.h = height;
+	destRect.x = x + (width - width * scale) / 2;
+	destRect.y = y + (height - height * scale) / 2;
+	destRect.w = width * scale;
+	destRect.h = height * scale;
+
+	SDL_SetTextureAlphaMod(m_textureMap[id], alpha);
+	SDL_RenderCopyEx(pRenderer, m_textureMap[id], &srcRect, &destRect, angle, 0, flip); //Load current frame on the buffer game.
+}
+
 void AssetsManager::drawTile(std::string id, int margin, int spacing, int x, int y, int width, int height, int currentRow, int currentFrame, SDL_Renderer *pRenderer)
 {
 	SDL_Rect srcRect;

@@ -158,6 +158,7 @@ public:
 	int m_stamina = 0;
 	std::string type = "";
 	SDL_Color m_color = { 0,255,0,0 };
+	float m_scale = 1;
 
 	Enemy()
 	{

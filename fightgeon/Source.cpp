@@ -791,12 +791,16 @@ void Game::spawnEnemy(ENEMY enemyType, Vector2D position)
 	switch (enemyType)
 	{
 	case ENEMY::SLIME:
+	{
 		enemy = std::make_unique<Slime>();
+		enemy->m_scale = (std::rand() % 11 + 5) / 10.f; //between 0.0 and 1.5
 		enemy->settings("slime_idle_down", spawnLocation * 50, Vector2D(0, 0), 33, 18, 1, 0, 0, 0.0, 1);
 		enemy->m_position += Vector2D(m_tileWidth / 2 - enemy->m_width / 2, m_tileHeight / 2 - enemy->m_height / 2);
 		enemy->type = "slime";
 		enemy->m_color = AssetsManager::Instance()->getColorFromInt(std::rand() % static_cast<int>(COLOR::COUNT));
+		enemy->m_color.a = std::rand() % 156 + 100; //set the transparency
 		break;
+	}
 	case ENEMY::HUMANOID:
 		enemy = std::make_unique<Humanoid>();
 		if (rnd.getRndInt(0, 1) == 0)

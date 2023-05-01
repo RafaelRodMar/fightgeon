@@ -258,6 +258,6 @@ void Enemy::draw()
 void Slime::draw()
 {
 	SDL_SetTextureColorMod(AssetsManager::Instance()->getTexture(m_textureID), m_color.r, m_color.g, m_color.b);
-	AssetsManager::Instance()->drawFrame(m_textureID, m_position.m_x, m_position.m_y, m_width, m_height,
+	AssetsManager::Instance()->drawFrameSc(m_textureID, m_position.m_x, m_position.m_y, m_width, m_height, m_scale, 
 		m_currentRow, m_currentFrame, Game::Instance()->getRenderer(), m_angle, m_alpha, SDL_FLIP_NONE);
 }
