@@ -283,7 +283,8 @@ void Game::render()
 		ss << std::setw(6) << std::setfill('0') << goldScore;
 		num = ss.str();
 		AssetsManager::Instance()->Text(num, "fontad", scw + 200, 20, { 255,255,255,255 }, m_pRenderer);
-		AssetsManager::Instance()->draw("key_ui", sw - 180, sh - 90, 180, 90, m_pRenderer, SDL_FLIP_NONE);
+		//AssetsManager::Instance()->draw("key_ui", sw - 180, sh - 90, 180, 90, m_pRenderer, SDL_FLIP_NONE); //original
+		AssetsManager::Instance()->drawFrameSc("key_ui", sw - 180, sh - 70, 180, 90, 0.5, 0, 0, m_pRenderer, 0.0, 255, SDL_FLIP_NONE); //scaled, half the size
 		AssetsManager::Instance()->draw("attack_ui", scw - 270, sh - 40, 35, 35, m_pRenderer, SDL_FLIP_NONE);
 		AssetsManager::Instance()->Text(std::to_string(p->m_attack), "fontad", scw - 210, sh - 35, { 255,255,255,255 }, m_pRenderer);
 		AssetsManager::Instance()->draw("defense_ui", scw - 150, sh - 40, 35, 35, m_pRenderer, SDL_FLIP_NONE);
