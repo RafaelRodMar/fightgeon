@@ -197,6 +197,11 @@ bool Game::init(const char* title, int xpos, int ypos, int width,
 	button4 = { 105, 51, 100, 50 };
 	r4 = 0; g4 = 150; b4 = 0; a4 = 255;
 
+	//set a random music
+	Mix_Volume(-1, MIX_MAX_VOLUME);
+	int musNum = rand() % 4 + 1; //numbers 1,2,3,4
+	AssetsManager::Instance()->playMusic("music" + std::to_string(musNum), -1);
+
 	state = MENU;
 
 	return true;
@@ -315,6 +320,7 @@ void Game::clean()
 	std::cout << "cleaning game\n";
 	InputHandler::Instance()->clean();
 	AssetsManager::Instance()->clearFonts();
+	AssetsManager::Instance()->clearMusicAndSounds();
 	TTF_Quit();
 	Game::Instance()->m_bRunning = false;
 	SDL_DestroyWindow(m_pWindow);

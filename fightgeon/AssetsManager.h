@@ -70,6 +70,22 @@ public:
 	void playSound(std::string id, int loop);
 	void playMusic(std::string id, int loop);
 
+	void clearMusicAndSounds() {
+		auto iter = m_sfxs.begin();
+		while (iter != m_sfxs.end()) {
+			Mix_FreeChunk(iter->second);
+			iter++;
+		}
+		m_sfxs.clear();
+
+		auto iter2 = m_music.begin();
+		while (iter2 != m_music.end()) {
+			Mix_FreeMusic(iter2->second);
+			iter2++;
+		}
+		m_music.clear();
+	}
+
 	//FONTS
 	bool loadFont(const string &fileName, string id, int size);
 
