@@ -63,6 +63,7 @@ public:
 	SDL_Texture* getTexture(std::string text) { return m_textureMap[text]; };
 
 	void clearFromTextureMap(string id); //delete SDL_Texture from the map
+	void clearTextureMap(); //delete all
 
 	//SOUND / MUSIC
 

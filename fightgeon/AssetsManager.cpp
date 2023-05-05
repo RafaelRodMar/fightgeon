@@ -150,7 +150,18 @@ SDL_Color AssetsManager::getColorFromString(std::string colorName) {
 
 void AssetsManager::clearFromTextureMap(string id)
 {
+	SDL_DestroyTexture(m_textureMap[id]);
 	m_textureMap.erase(id);
+}
+
+void AssetsManager::clearTextureMap()
+{
+	auto iter = m_textureMap.begin();
+	while (iter != m_textureMap.end()) {
+		SDL_DestroyTexture(iter->second);
+		iter++;
+	}
+	m_textureMap.clear();
 }
 
 

@@ -187,7 +187,7 @@ private:
 	SDL_Rect button4;
 	Uint8 r4, g4, b4, a4;
 
-	std::unique_ptr<player> p;
+	player* p;
 	int state = -1;
 	std::vector<int> vhiscores;
 	int lives, score;
@@ -213,12 +213,10 @@ private:
 						 "door_locked", "door_unlocked", "wall_entrance", "floor", "floor_alt", "empty" };
 
 
-	//std::list<Entity*> entities;
 	bool isCollide(Entity *a, Entity *b);
 	bool isCollideRect(Entity *a, Entity *b);
-	//std::vector<GameObject*> m_gameObjects;
-	std::vector<std::unique_ptr<Entity>> m_items;
-	std::vector<std::unique_ptr<Enemy>> m_enemies;
+	std::vector<Entity*> m_items;
+	std::vector<Enemy*> m_enemies;
 
 	bool m_bRunning;
 	int m_gameWidth;

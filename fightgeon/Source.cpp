@@ -181,7 +181,7 @@ bool Game::init(const char* title, int xpos, int ypos, int width,
 	populateLevel();
 
 	//create player
-	p = std::make_unique<player>();
+	p = new player();
 
 	//menu init
 	button0 = { 0,0,100,100 };
@@ -256,9 +256,6 @@ void Game::render()
 			}
 		}
 
-		/*for (auto& i : entities)
-			i->draw();*/
-
 		for (auto& i : m_items)
 			i->draw();
 
@@ -321,6 +318,7 @@ void Game::clean()
 	InputHandler::Instance()->clean();
 	AssetsManager::Instance()->clearFonts();
 	AssetsManager::Instance()->clearMusicAndSounds();
+	AssetsManager::Instance()->clearTextureMap();
 	TTF_Quit();
 	Game::Instance()->m_bRunning = false;
 	SDL_DestroyWindow(m_pWindow);
@@ -449,6 +447,47 @@ void Game::update()
 			e->update();
 		}*/
 
+		for (auto& i : m_items) {
+			if (i->m_name == "gold")
+			{
+				if (isCollideRect(p, i))
+				{
+					// Get the amount of gold.
+					int goldValue = dynamic_cast<Gold&>(*i).amount;
+					// Add to the gold total.
+					goldScore += goldValue;
+					// Play gold collect sound effect
+					AssetsManager::Instance()->playSound("coin_pickup", 0);
+					//mark the object for being destroyed later
+					i->m_life = false;
+				}
+			}
+
+			if (i->m_name == "gem")
+			{
+				if (isCollideRect(p, i))
+				{
+					// Get the amount of gold.
+					int scoreValue = dynamic_cast<Gem&>(*i).m_scoreValue;
+					// Add to the gold total.
+					gemScore += scoreValue;
+					// Play gold collect sound effect
+					AssetsManager::Instance()->playSound("gem_pickup", 0);
+					//mark the object for being destroyed later
+					i->m_life = false;
+				}
+			}
+		}
+
+		//remove objects if needed
+		for (auto i = m_items.begin(); i != m_items.end();)
+		{
+			Entity *e = *i;
+
+			if (e->m_life == false) { i = m_items.erase(i); delete e; }
+			else i++;
+		}
+
 		for (auto& i : m_items)
 			i->update();
 
@@ -525,10 +564,10 @@ void Game::populateLevel()
 
 	for (int i = 0; i < 5; i++) {
 		r = rnd.getRndInt(0, wallTiles.size() - 1);
-		std::unique_ptr<Torch> torch = std::make_unique<Torch>();
+		Torch* torch = new Torch();
 		torch->settings("torch", wallTiles[r] * 50, Vector2D(0, 0), 90 / 5, 36, 5, 0, 0, 0.0, 1);
 		torch->m_position += Vector2D(m_tileWidth / 2 - torch->m_width / 2, m_tileHeight / 2 - torch->m_height / 2);
-		m_items.push_back(std::move(torch));
+		m_items.push_back(torch);
 		wallTiles.erase(wallTiles.begin() + r);
 	}
 
@@ -698,67 +737,67 @@ void Game::spawnItem(ITEM itemType, Vector2D position)
 	{
 		std::string potionNames[7] = { "potion_attack", "potion_defense", "potion_dexterity", "potion_health", "potion_mana", "potion_stamina", "potion_strength" };
 		int pName = rnd.getRndInt(0, static_cast<int>(POTION::COUNT)-1);
-		std::unique_ptr<Potion> item = std::make_unique<Potion>();
+		Potion* item = new Potion();
 		item->settings(potionNames[pName], spawnLocation * 50, Vector2D(0, 0), 120 / 8, 30, 8, 0, 0, 0.0, 1);
 		item->m_position += Vector2D(m_tileWidth / 2 - item->m_width / 2, m_tileHeight / 2 - item->m_height / 2);
 		item->m_statBoost = rnd.getRndInt(0, 10) + 5;
 		item->m_type = static_cast<POTION>(pName);
-		m_items.push_back(std::move(item));
+		m_items.push_back(item);
 		break;
 	}
 	case ITEM::GEM:
 	{
-		std::unique_ptr<Gem> item = std::make_unique<Gem>();
+		Gem* item = new Gem();
 		item->settings("gem", spawnLocation * 50, Vector2D(0, 0), 168 / 8, 25, 8, 0, 0, 0.0, 1);
 		//center the item in the tile
 		item->m_position += Vector2D(m_tileWidth / 2 - item->m_width / 2, m_tileHeight / 2 - item->m_height / 2);
 		item->m_scoreValue = rnd.getRndInt(0, 100);
 		// Add the item to the list of all items.
-		m_items.push_back(std::move(item));
+		m_items.push_back(item);
 		break;
 	}
 	case ITEM::GOLD_SMALL:
 	{
-		std::unique_ptr<Gold> item = std::make_unique<Gold>();
+		Gold* item = new Gold();
 		item->settings("gold_small", spawnLocation * 50, Vector2D(0, 0), 96 / 8, 16, 8, 0, 0, 0.0, 1);
 		item->m_position += Vector2D(m_tileWidth / 2 - item->m_width / 2, m_tileHeight / 2 - item->m_height / 2);
 		item->amount = 20;
-		m_items.push_back(std::move(item));
+		m_items.push_back(item);
 		break;
 	}
 	case ITEM::GOLD_MEDIUM:
 	{
-		std::unique_ptr<Gold> item = std::make_unique<Gold>();
+		Gold* item = new Gold();
 		item->settings("gold_medium", spawnLocation * 50, Vector2D(0, 0), 144 / 8, 19, 8, 0, 0, 0.0, 1);
 		item->m_position += Vector2D(m_tileWidth / 2 - item->m_width / 2, m_tileHeight / 2 - item->m_height / 2);
 		item->amount = 120;
-		m_items.push_back(std::move(item));
+		m_items.push_back(item);
 		break;
 	}
 	case ITEM::GOLD_LARGE:
 	{
-		std::unique_ptr<Gold> item = std::make_unique<Gold>();
+		Gold* item = new Gold();
 		item->settings("gold_large", spawnLocation * 50, Vector2D(0, 0), 192 / 8, 19, 8, 0, 0, 0.0, 1);
 		item->m_position += Vector2D(m_tileWidth / 2 - item->m_width / 2, m_tileHeight / 2 - item->m_height / 2);
 		item->amount = 220;
-		m_items.push_back(std::move(item));
+		m_items.push_back(item);
 		break;
 	}
 	case ITEM::KEY:
 	{
-		std::unique_ptr<Key> item = std::make_unique<Key>();
+		Key* item = new Key();
 		item->settings("key", spawnLocation * 50, Vector2D(0, 0), 240 / 8, 24, 8, 0, 0, 0.0, 1);
 		item->m_position += Vector2D(m_tileWidth / 2 - item->m_width / 2, m_tileHeight / 2 - item->m_height / 2);
-		m_items.push_back(std::move(item));
+		m_items.push_back(item);
 		break;
 	}
 	case ITEM::HEART:
 	{
-		std::unique_ptr<Heart> item = std::make_unique<Heart>();
+		Heart* item = new Heart();
 		item->settings("heart", spawnLocation * 50, Vector2D(0, 0), 120 / 8, 22, 8, 0, 0, 0.0, 1);
 		item->m_position += Vector2D(m_tileWidth / 2 - item->m_width / 2, m_tileHeight / 2 - item->m_height / 2);
 		item->m_health = rnd.getRndInt(0, 10) + 10;
-		m_items.push_back(std::move(item));
+		m_items.push_back(item);
 		break;
 	}
 	default:
@@ -794,12 +833,12 @@ void Game::spawnEnemy(ENEMY enemyType, Vector2D position)
 	}
 
 	// Create the enemy.
-	std::unique_ptr<Enemy> enemy;
+	Enemy* enemy;
 	switch (enemyType)
 	{
 	case ENEMY::SLIME:
 	{
-		enemy = std::make_unique<Slime>();
+		enemy = new Slime();
 		enemy->m_scale = (std::rand() % 11 + 5) / 10.f; //between 0.0 and 1.5
 		enemy->settings("slime_idle_down", spawnLocation * 50, Vector2D(0, 0), 33, 18, 1, 0, 0, 0.0, 1);
 		enemy->m_position += Vector2D(m_tileWidth / 2 - enemy->m_width / 2, m_tileHeight / 2 - enemy->m_height / 2);
@@ -809,7 +848,7 @@ void Game::spawnEnemy(ENEMY enemyType, Vector2D position)
 		break;
 	}
 	case ENEMY::HUMANOID:
-		enemy = std::make_unique<Humanoid>();
+		enemy = new Humanoid();
 		if (rnd.getRndInt(0, 1) == 0)
 		{
 			enemy->settings("goblin_idle_down", spawnLocation * 50, Vector2D(0, 0), 33, 33, 1, 0, 0, 0.0, 1);
@@ -850,7 +889,7 @@ void Game::spawnEnemy(ENEMY enemyType, Vector2D position)
 		break;
 	}
 	// Add to list of all enemies.
-	m_enemies.push_back(std::move(enemy));
+	m_enemies.push_back(enemy);
 }
 
 void Game::UpdateHiScores(int newscore)
