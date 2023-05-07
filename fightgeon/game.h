@@ -161,6 +161,9 @@ public:
 		return false;
 	}
 
+	// Plays the given sound effect, with randomized parameters.
+	void playSound(std::string& sound, Vector2D position);
+	
 	void UpdateHiScores(int newscore);
 	void ReadHiScores();
 	void WriteHiScores();

@@ -548,6 +548,24 @@ void Game::update()
 			else i++;
 		}
 
+		//play sound if torch near
+		bool torchSound = false;
+		for (auto& i : m_items) {
+			if (i->m_name == "torch")
+			{
+				if (std::sqrt((i->m_position.m_x - p->m_position.m_x)*(i->m_position.m_x - p->m_position.m_x)
+					+ (i->m_position.m_y - p->m_position.m_y)*(i->m_position.m_y - p->m_position.m_y)) < 100)
+				{
+					torchSound = true;
+					if (!Mix_Playing(3))
+					{
+						Mix_PlayChannel(3, AssetsManager::Instance()->getSound("fire"), -1); //infinite loop
+					}
+				}
+			}
+		}
+		if (torchSound == false) Mix_HaltChannel(3); //if not torch near then stop.
+
 		for (auto& i : m_items)
 			i->update();
 
@@ -950,6 +968,11 @@ void Game::spawnEnemy(ENEMY enemyType, Vector2D position)
 	}
 	// Add to list of all enemies.
 	m_enemies.push_back(enemy);
+}
+
+void Game::playSound(std::string & sound, Vector2D position)
+{
+	AssetsManager::Instance()->playSound(sound, 0);
 }
 
 void Game::UpdateHiScores(int newscore)
