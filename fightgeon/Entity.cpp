@@ -128,6 +128,10 @@ void player::configure()
 	m_strength += m_statPoints * (strengthBias / total);
 	m_dexterity += m_statPoints * (dexterityBias / total);
 	m_stamina += m_statPoints * (staminaBias / total);
+
+	//set health and mana
+	m_health = m_maxHealth = 100;
+	m_mana = m_maxMana = 100;
 }
 
 void player::update()

@@ -285,8 +285,12 @@ void Game::render()
 		ss << std::setw(6) << std::setfill('0') << goldScore;
 		num = ss.str();
 		AssetsManager::Instance()->Text(num, "fontad", scw + 200, 20, { 255,255,255,255 }, m_pRenderer);
-		//AssetsManager::Instance()->draw("key_ui", sw - 180, sh - 90, 180, 90, m_pRenderer, SDL_FLIP_NONE); //original
-		AssetsManager::Instance()->drawFrameSc("key_ui", sw - 180, sh - 70, 180, 90, 0.5, 0, 0, m_pRenderer, 0.0, 255, SDL_FLIP_NONE); //scaled, half the size
+		
+		if(hasKey)
+			AssetsManager::Instance()->drawFrameSc("key_ui", sw - 180, sh - 70, 180, 90, 0.5, 0, 0, m_pRenderer, 0.0, 255, SDL_FLIP_NONE); //scaled, half the size
+		else
+			AssetsManager::Instance()->drawFrameSc("key_ui_transparent", sw - 180, sh - 70, 180, 90, 0.5, 0, 0, m_pRenderer, 0.0, 255, SDL_FLIP_NONE); //scaled, half the size
+
 		AssetsManager::Instance()->draw("attack_ui", scw - 270, sh - 40, 35, 35, m_pRenderer, SDL_FLIP_NONE);
 		AssetsManager::Instance()->Text(std::to_string(p->m_attack), "fontad", scw - 210, sh - 35, { 255,255,255,255 }, m_pRenderer);
 		AssetsManager::Instance()->draw("defense_ui", scw - 150, sh - 40, 35, 35, m_pRenderer, SDL_FLIP_NONE);
@@ -474,6 +478,62 @@ void Game::update()
 					// Play gold collect sound effect
 					AssetsManager::Instance()->playSound("gem_pickup", 0);
 					//mark the object for being destroyed later
+					i->m_life = false;
+				}
+			}
+
+			if (i->m_name == "key")
+			{
+				if (isCollideRect(p, i))
+				{
+					hasKey = true;
+					AssetsManager::Instance()->playSound("key_pickup", 0);
+					i->m_life = false;
+				}
+			}
+
+			if (i->m_name == "heart")
+			{
+				if (isCollideRect(p, i))
+				{
+					p->m_health = p->m_maxHealth;
+					//AssetsManager::Instance()->playSound("heart_pickup", 0);
+					i->m_life = false;
+				}
+			}
+
+			if (i->m_name == "potion")
+			{
+				if (isCollideRect(p, i))
+				{
+					POTION pt = dynamic_cast<Potion*>(i)->m_type;
+					
+					switch (pt) {
+					case POTION::ATTACK:
+						p->m_attack++;
+						break;
+					case POTION::DEFENSE:
+						p->m_defense++;
+						break;
+					case POTION::STRENGTH:
+						p->m_strength++;
+						break;
+					case POTION::DEXTERITY:
+						p->m_dexterity++;
+						break;
+					case POTION::STAMINA:
+						p->m_stamina++;
+						break;
+					case POTION::HEALTH:
+						p->m_health++;
+						break;
+					case POTION::MANA:
+						p->m_mana++;
+						break;
+					default:
+						break;
+					}
+
 					i->m_life = false;
 				}
 			}
