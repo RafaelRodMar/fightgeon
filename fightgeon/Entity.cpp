@@ -46,13 +46,22 @@ void bullet::update()
 
 	if (m_position.m_x > Game::Instance()->getGameWidth() || m_position.m_x<0 || m_position.m_y>Game::Instance()->getGameHeight() || m_position.m_y < 0) m_life = 0;
 
+	int tw = Game::Instance()->getTileWidth();
+	int th = Game::Instance()->getTileHeight();
+
+	//collisions with walls
+	if(!Game::Instance()->isFloor(Vector2D(m_position.m_y / th, m_position.m_x / tw))) m_life = 0;
+	if (!Game::Instance()->isFloor(Vector2D((m_position.m_y + m_height) / th, (m_position.m_x + m_width) / tw))) m_life = 0;
+	if (!Game::Instance()->isFloor(Vector2D(m_position.m_y / th, (m_position.m_x + m_width) / tw))) m_life = 0;
+	if (!Game::Instance()->isFloor(Vector2D((m_position.m_y + m_height) / th, m_position.m_x / tw))) m_life = 0;
+
 	m_currentFrame = int(((SDL_GetTicks() / (100)) % m_numFrames));
 }
 
 void bullet::draw()
 {
 	AssetsManager::Instance()->drawFrame(m_textureID, m_position.m_x, m_position.m_y, m_width, m_height,
-		m_currentRow, m_currentFrame, Game::Instance()->getRenderer(), m_angle+90, m_alpha, SDL_FLIP_NONE);
+		m_currentRow, m_currentFrame, Game::Instance()->getRenderer(), 0.0, m_alpha, SDL_FLIP_NONE);
 }
 
 void player::configure()
