@@ -205,6 +205,29 @@ void player::handleEvents()
 
 		if (check == true) m_velocity.m_x -= 3;
 	}
+	if (InputHandler::Instance()->getMouseButtonState(LEFT))
+	{
+		Vector2D* mousePos = InputHandler::Instance()->getMousePosition();
+
+		bullet* b = new bullet();
+		int w = 0, h = 0;
+		if (projectileID == "arrow") { w = 24; h = 24; }
+		if (projectileID == "dagger") { w = 24; h = 15; }
+		if (projectileID == "magic_ball") { w = 21; h = 21; }
+		if (projectileID == "sword") { w = 24; h = 21; }
+
+		//get the angle with the mouse in radians
+		double dx = mousePos->m_x - m_position.m_x;
+		double dy = mousePos->m_y - m_position.m_y;
+		double radians = std::atan2(dy, dx);
+		//convert the angle to degrees
+		double degrees = radians * 180.0 / 3.14159265359;
+
+		b->settings(projectileID, m_position, Vector2D(5, 5), w, h, 1, 0, 0, degrees, 1);
+		Game::Instance()->addItem(b);
+
+		InputHandler::Instance()->reset(); //reset the buttons
+	}
 
 	m_textureID = type; //archer, thief, warrior or mage
 	if (newDirection == '0')

@@ -159,6 +159,9 @@ public:
 		if (level[(int)v.m_x][(int)v.m_y].type == (int)TILE::FLOOR_ALT) return true;
 		return false;
 	}
+	void addItem(Entity* e) {
+		m_items.push_back(e);
+	}
 
 	// Plays the given sound effect, with randomized parameters.
 	void playSound(std::string& sound, Vector2D position);
