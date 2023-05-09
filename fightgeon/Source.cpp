@@ -155,11 +155,11 @@ bool Game::init(const char* title, int xpos, int ypos, int width,
 		for (int j = 0; j < 19; j++) {
 			if ((i % 2 != 0) && (j % 2 != 0))
 			{
-				level[i][j] = 21; //empty cell
+				level[i][j].type = (int)TILE::EMPTY; //empty cell
 			}
 			else
 			{
-				level[i][j] = 10; //wall_top
+				level[i][j].type = (int)TILE::WALL_TOP; //wall_top
 			}
 		}
 	}
@@ -252,7 +252,7 @@ void Game::render()
 	{
 		for (int i = 0; i < 19; i++) {
 			for (int j = 0; j < 19; j++) {
-				AssetsManager::Instance()->draw(numToTile[level[i][j]], j * m_tileWidth, i * m_tileHeight, m_tileWidth, m_tileHeight, Game::Instance()->getRenderer());
+				AssetsManager::Instance()->draw(numToTile[level[i][j].type], j * m_tileWidth, i * m_tileHeight, m_tileWidth, m_tileHeight, Game::Instance()->getRenderer());
 			}
 		}
 
@@ -632,7 +632,7 @@ void Game::populateLevel()
 		for (int i = 0; i < 19; i++) {
 			if (i > 0 && j > 0 && i < 18 && j < 18)
 			{
-				if (level[i][j] == 0 || level[i][j] == 10 || level[i][j] == 11)
+				if (level[i][j].type == 0 || level[i][j].type == 10 || level[i][j].type == 11)
 				{
 					wallTiles.push_back(Vector2D(j, i)); //inverted
 				}
@@ -686,17 +686,17 @@ void Game::createPath(int columnIndex, int rowIndex) {
 			int tileRow = dy;
 
 			//if the tile has not yet been visited
-			if (level[dy][dx] == 21)
+			if (level[dy][dx].type == (int)TILE::EMPTY)
 			{
 				//mark the tile as floor
-				level[dy][dx] = 19;
+				level[dy][dx].type = (int)TILE::FLOOR;
 				//cout << "mark the tile as floor" << endl;
 
 				//knock the wall down
 				int ddx = currentTileCol + (directions[i][0] / 2);
 				int ddy = currentTileRow + (directions[i][1] / 2);
 
-				level[ddy][ddx] = 19;
+				level[ddy][ddx].type = (int)TILE::FLOOR;
 
 				//recursively call the function with the new tile
 				createPath(dx, dy);
@@ -725,7 +725,7 @@ void Game::createRooms(int roomCount) {
 				//check if the tile is valid
 				if (newI > 0 && newY > 0 && newI < 18 && newY < 18)
 				{
-					level[newI][newY] = 19;
+					level[newI][newY].type = (int)TILE::FLOOR;
 				}
 			}
 		}
@@ -744,40 +744,40 @@ void Game::calculateTextures() {
 	for (int i = 0; i < 19; ++i) {
 		for (int j = 0; j < 19; ++j) {
 			//check if the tile is a wall block
-			if ((level[i][j] >= 0 && level[i][j] <= 15) || level[i][j] == 18)
+			if ((level[i][j].type >= 0 && level[i][j].type <= 15) || level[i][j].type == 18)
 			{
 				//calculate bit mask
 				int value = 0;
 
 				//store the current type as default
-				int type = level[i][j];
+				int type = level[i][j].type;
 
 				//top
-				if (i > 0 && ((level[i - 1][j] >= 0 && level[i - 1][j] <= 15) || level[i - 1][j] == 18))
+				if (i > 0 && ((level[i - 1][j].type >= 0 && level[i - 1][j].type <= 15) || level[i - 1][j].type == 18))
 				{
 					value += 1;
 				}
 
 				//right
-				if (j < 18 && ((level[i][j + 1] >= 0 && level[i][j + 1] <= 15) || level[i][j + 1] == 18))
+				if (j < 18 && ((level[i][j + 1].type >= 0 && level[i][j + 1].type <= 15) || level[i][j + 1].type == 18))
 				{
 					value += 2;
 				}
 
 				//bottom
-				if (i < 18 && ((level[i + 1][j] >= 0 && level[i + 1][j] <= 15) || level[i + 1][j] == 18))
+				if (i < 18 && ((level[i + 1][j].type >= 0 && level[i + 1][j].type <= 15) || level[i + 1][j].type == 18))
 				{
 					value += 4;
 				}
 
 				//left
-				if (j > 0 && ((level[i][j - 1] >= 0 && level[i][j - 1] <= 15) || level[i][j - 1] == 18))
+				if (j > 0 && ((level[i][j - 1].type >= 0 && level[i][j - 1].type <= 15) || level[i][j - 1].type == 18))
 				{
 					value += 8;
 				}
 
 				//set the new type
-				level[i][j] = value;
+				level[i][j].type = value;
 			}
 		}
 	}

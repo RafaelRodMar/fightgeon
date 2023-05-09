@@ -114,10 +114,9 @@ enum class TILE {
 
 //the map is in the format row,column.
 struct Tile {
-	TILE type;  //don't forget to make possible alternative sprites for the same tile (floor, floor_alt)
 	int columnIndex;
 	int rowIndex;
-	SDL_Texture* texture;
+	int type; //don't forget to make possible alternative sprites for the same tile (floor, floor_alt)
 	int H; //heuristic/movement cost to goal.
 	int G; //movement cost. (total of entire path).
 	int F; //estimated cost for full path. (G+H).
@@ -156,8 +155,8 @@ public:
 	std::string getHeroType() const { return heroType[heroNum]; }
 	int getHeroNum() const { return heroNum; }
 	bool isFloor(Vector2D v) {
-		if (level[(int)v.m_x][(int)v.m_y] == 19) return true;
-		if (level[(int)v.m_x][(int)v.m_y] == 20) return true;
+		if (level[(int)v.m_x][(int)v.m_y].type == (int)TILE::FLOOR) return true;
+		if (level[(int)v.m_x][(int)v.m_y].type == (int)TILE::FLOOR_ALT) return true;
 		return false;
 	}
 
@@ -197,7 +196,7 @@ private:
 
 	//map
 	SDL_Color colorMod;
-	int level[19][19];
+	Tile level[19][19];
 	void populateLevel();
 	int m_tileSize = 50;
 	int m_tileWidth = 50;
