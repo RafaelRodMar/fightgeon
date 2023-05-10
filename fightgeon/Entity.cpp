@@ -253,6 +253,7 @@ void player::handleEvents()
 
 		b->settings(projectileID, m_position, Vector2D(5, 5), w, h, 1, 0, 0, degrees, 1);
 		Game::Instance()->addItem(b);
+		AssetsManager::Instance()->playSound("player_shoot", 0);
 
 		InputHandler::Instance()->reset(); //reset the buttons
 	}

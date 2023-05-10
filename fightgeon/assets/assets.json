@@ -144,12 +144,13 @@
 	"music3": "msc_main_track_3.wav",
 	"music4": "msc_main_track_4.wav"
     },
-    "snd": {
-        "coin_pickup": "snd_coin_pickup.wav",
-        "enemy_dead": "snd_enemy_dead.wav",
-        "fire": "snd_fire.wav",
-        "gem_pickup": "snd_gem_pickup.wav",
-        "key_pickup": "snd_key_pickup.wav",
-        "player_hit": "snd_player_hit.wav"
-    }
+  "snd": {
+    "coin_pickup": "snd_coin_pickup.wav",
+    "enemy_dead": "snd_enemy_dead.wav",
+    "fire": "snd_fire.wav",
+    "gem_pickup": "snd_gem_pickup.wav",
+    "key_pickup": "snd_key_pickup.wav",
+    "player_hit": "snd_player_hit.wav",
+    "player_shoot": "sfx_wpn_dagger.wav"
+  }
 }
