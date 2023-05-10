@@ -60,8 +60,27 @@ void bullet::update()
 
 void bullet::draw()
 {
+	bool hflip = false;
+	bool vflip = false;
+	if (m_angle < 0 && m_angle > -90) {
+		hflip = false; vflip = true;
+	}
+	if (m_angle > 0 && m_angle < 90) {
+		hflip = false; vflip = false;
+	}
+	if (m_angle < 0 && m_angle < -90) {
+		hflip = true; vflip = true;
+	}
+	if (m_angle > 0 && m_angle > 90) {
+		hflip = true; vflip = false;
+	}
+	
+	SDL_RendererFlip flip = SDL_FLIP_NONE;
+	if (hflip) flip = (SDL_RendererFlip)(flip | SDL_FLIP_HORIZONTAL);
+	if (vflip) flip = (SDL_RendererFlip)(flip | SDL_FLIP_VERTICAL);
+
 	AssetsManager::Instance()->drawFrame(m_textureID, m_position.m_x, m_position.m_y, m_width, m_height,
-		m_currentRow, m_currentFrame, Game::Instance()->getRenderer(), 0.0, m_alpha, SDL_FLIP_NONE);
+		m_currentRow, m_currentFrame, Game::Instance()->getRenderer(), 0.0, m_alpha, flip );
 }
 
 void player::configure()
