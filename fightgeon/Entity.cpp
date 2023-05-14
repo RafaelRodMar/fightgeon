@@ -303,12 +303,202 @@ void player::draw()
 void Enemy::update()
 {
 	m_currentFrame = int(((SDL_GetTicks() / (100)) % m_numFrames));
+
+	//move towards current target location.
+	if (!m_targetPositions.empty())
+	{
+		Vector2D targetLocation = m_targetPositions.front();
+		m_velocity = Vector2D(targetLocation.m_x - m_position.m_x, targetLocation.m_y + m_position.m_y);
+
+		if (abs(m_velocity.m_x) < 10.f && abs(m_velocity.m_y) < 10.f)
+		{
+			m_targetPositions.erase(m_targetPositions.begin());
+		}
+		else
+		{
+			float length = sqrt(m_velocity.m_x * m_velocity.m_x + m_velocity.m_y * m_velocity.m_y);
+			m_velocity.m_x /= length;
+			m_velocity.m_y /= length;
+
+			m_position.m_x += m_velocity.m_x;
+			m_position.m_y += m_velocity.m_y;
+		}
+	}
 }
 
 void Enemy::draw()
 {
 	AssetsManager::Instance()->drawFrame(m_textureID, m_position.m_x, m_position.m_y, m_width, m_height,
 		m_currentRow, m_currentFrame, Game::Instance()->getRenderer(), m_angle, m_alpha, SDL_FLIP_NONE);
+}
+
+void Enemy::updatePathFinding()
+{
+	//the level
+	Tile(&level)[19][19] = Game::Instance()->getLevel();
+	//the player position
+	Vector2D playerPos = Game::Instance()->getPlayer()->m_position;
+
+	//variables
+	std::vector<Tile*> openList; //nodes waiting to be checked
+	std::vector<Tile*> closedList; //already checked nodes
+	std::vector<Tile*> pathList;
+	std::vector<Tile*>::iterator position; //for finding and removing nodes in the vectors
+	Tile* currentNode;
+
+	//reset all nodes
+	Game::Instance()->resetNodes();
+
+	//store the start(enemy) and end(player) nodes
+	Tile* startNode = Game::Instance()->getTile(m_position);
+	Tile* goalNode = Game::Instance()->getTile(playerPos);
+	//std::cout << "startNode: " << startNode->columnIndex << "," << startNode->rowIndex << std::endl;
+	//std::cout << "goalNode: " << goalNode->columnIndex << "," << goalNode->rowIndex << std::endl;
+
+	//check if there is no path to find
+	if (startNode == goalNode)
+	{
+		m_targetPositions.clear();
+		return;
+	}
+
+	//pre-compute the h cost (estimated cost to goal) for each node
+	for (int i = 0; i < 19; i++) {
+		for (int j = 0; j < 19; j++) {
+			int rowOffset, heightOffset;
+			Tile* node = Game::Instance()->getTile(i, j);
+
+			rowOffset = abs(node->rowIndex - goalNode->rowIndex);
+			heightOffset = abs(node->columnIndex - goalNode->columnIndex);
+
+			node->H = heightOffset + rowOffset;
+		}
+	}
+
+	//add the start node to the open list
+	openList.push_back(startNode);
+
+	//while we have values to check in the open list
+	while (!openList.empty()) {
+
+		//find the node in the open list with the lowest F value and mark it as current.
+		int lowestF = INT_MAX;
+
+		for (Tile* tile : openList) {
+			if (tile->F < lowestF)
+			{
+				lowestF = tile->F;
+				currentNode = tile;
+			}
+		}
+
+		//remove the current node from the open list and add it to the closed list.
+		position = std::find(openList.begin(), openList.end(), currentNode);
+		if (position != openList.end())
+			openList.erase(position);
+
+		closedList.push_back(currentNode);
+
+		//find all valid adjacent nodes.
+		std::vector<Tile*> adjacentTiles;
+
+		Tile* node;
+
+		//top
+		node = Game::Instance()->getTile(currentNode->columnIndex, currentNode->rowIndex - 1);
+		if ((node != nullptr) && Game::Instance()->isFloor(*node))
+		{
+			adjacentTiles.push_back(Game::Instance()->getTile(currentNode->columnIndex, currentNode->rowIndex - 1));
+		}
+
+		//right
+		node = Game::Instance()->getTile(currentNode->columnIndex + 1, currentNode->rowIndex);
+		if ((node != nullptr) && Game::Instance()->isFloor(*node))
+		{
+			adjacentTiles.push_back(Game::Instance()->getTile(currentNode->columnIndex + 1, currentNode->rowIndex));
+		}
+
+		//bottom
+		node = Game::Instance()->getTile(currentNode->columnIndex, currentNode->rowIndex + 1);
+		if ((node != nullptr) && Game::Instance()->isFloor(*node))
+		{
+			adjacentTiles.push_back(Game::Instance()->getTile(currentNode->columnIndex, currentNode->rowIndex + 1));
+		}
+
+		//left
+		node = Game::Instance()->getTile(currentNode->columnIndex - 1, currentNode->rowIndex);
+		if ((node != nullptr) && Game::Instance()->isFloor(*node))
+		{
+			adjacentTiles.push_back(Game::Instance()->getTile(currentNode->columnIndex - 1, currentNode->rowIndex));
+		}
+
+		//for all adjacent nodes...
+		for (Tile* node : adjacentTiles) {
+			//if the node is our goal node
+			if (node == goalNode)
+			{
+				//parent the goal node to the current
+				node->parentNode = currentNode;
+
+				//store the current path.
+				while (node->parentNode != nullptr) {
+					pathList.push_back(node);
+					node = node->parentNode;
+				}
+
+				//empty the open list and break out of our for loop.
+				openList.clear();
+				break;
+			}
+			else
+			{
+				//if the node is not in the closed list.
+				position = std::find(closedList.begin(), closedList.end(), node);
+				if (position == closedList.end())
+				{
+					//if the node is not in the open list.
+					position = std::find(openList.begin(), openList.end(), node);
+					if (position == openList.end())
+					{
+						//add the node to the open list
+						openList.push_back(node);
+
+						//set the parent of the node to the current node
+						node->parentNode = currentNode;
+
+						//calculate G (total movement cost so far) cost.
+						node->G = currentNode->G + 10;
+
+						//calculate F (total movement cost + heuristic) cost.
+						node->F = node->G + node->H;
+					}
+					else
+					{
+						//check if this path is quicker than the other
+						int tempG = currentNode->G + 10;
+
+						//check if tempG is faster than the other.
+						if (tempG < node->G)
+						{
+							//re-parent node to this one.
+							node->parentNode = currentNode;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	//clear the vector of target positions
+	m_targetPositions.clear();
+
+	//store the node locations as the enemies target locations.
+	for (Tile* tile : pathList) {
+		m_targetPositions.push_back(Vector2D(tile->columnIndex, tile->rowIndex));
+	}
+
+	//reverse the path (it is stored from destination to start and need to be reversed)
+	std::reverse(m_targetPositions.begin(), m_targetPositions.end());
 }
 
 void Slime::draw()

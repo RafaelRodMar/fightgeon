@@ -161,6 +161,8 @@ bool Game::init(const char* title, int xpos, int ypos, int width,
 			{
 				level[i][j].type = (int)TILE::WALL_TOP; //wall_top
 			}
+			level[i][j].rowIndex = i;
+			level[i][j].columnIndex = j;
 		}
 	}
 
@@ -573,6 +575,24 @@ void Game::update()
 			i->update();
 
 		p->update();
+
+		//check if the player has moved grid square
+		Tile* playerCurrentTile = getTile(p->m_position);
+
+		if (m_playerPreviousTile != playerCurrentTile)
+		{
+			//store the new tile
+			m_playerPreviousTile = playerCurrentTile;
+
+			//update path finding for all enmies if within range of the player
+			for (const auto& enemy : m_enemies) {
+				if (sqrt((enemy->m_position.m_x - p->m_position.m_x) * (enemy->m_position.m_x - p->m_position.m_x) +
+					(enemy->m_position.m_y - p->m_position.m_y) * (enemy->m_position.m_y - p->m_position.m_y)) < 300.0f)
+				{
+					enemy->updatePathFinding();
+				}
+			}
+		}
 	}
 
 }
@@ -650,7 +670,7 @@ void Game::populateLevel()
 	}
 
 	//add some enemies
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 1; i++)
 	{
 		spawnEnemy(static_cast<ENEMY>(rnd.getRndInt(0, static_cast<int>(ENEMY::COUNT) - 1)));
 	}
@@ -968,6 +988,18 @@ void Game::spawnEnemy(ENEMY enemyType, Vector2D position)
 	}
 	// Add to list of all enemies.
 	m_enemies.push_back(enemy);
+}
+
+void Game::resetNodes()
+{
+	for (int i = 0; i < 19; i++) {
+		for (int j = 0; j < 19; j++) {
+			level[i][j].parentNode = nullptr;
+			level[i][j].H = 0;
+			level[i][j].G = 0;
+			level[i][j].F = 0;
+		}
+	}
 }
 
 void Game::playSound(std::string & sound, Vector2D position)

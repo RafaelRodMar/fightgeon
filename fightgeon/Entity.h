@@ -165,6 +165,12 @@ public:
 	int m_hasTorso = -1;
 	int m_hasLegs = -1;
 
+	//pathfinding
+	//the target positions
+	std::vector<Vector2D> m_targetPositions;
+	//current target
+	Vector2D m_currentTarget;
+
 	Enemy()
 	{
 		m_name = "enemy";
@@ -172,6 +178,8 @@ public:
 
 	void update();
 	void draw();
+
+	void updatePathFinding();
 
 };
 

@@ -152,6 +152,21 @@ public:
 	int getGameHeight() const { return m_gameHeight; }
 	int getTileWidth() const { return m_tileWidth; }
 	int getTileHeight() const { return m_tileHeight; }
+	Tile(&getLevel())[19][19]{
+		return level;
+	}
+
+	Tile* getTile(Vector2D position) {
+		int tileColumn = position.m_y / m_tileHeight;
+		int tileRow = position.m_x / m_tileWidth;
+
+		return &level[tileColumn][tileRow];
+	}
+	Tile* getTile(int x, int y) {
+		return &level[y][x];
+	}
+
+	player* getPlayer() { return p; }
 	std::string getHeroType() const { return heroType[heroNum]; }
 	int getHeroNum() const { return heroNum; }
 	bool isFloor(Vector2D v) {
@@ -159,9 +174,17 @@ public:
 		if (level[(int)v.m_x][(int)v.m_y].type == (int)TILE::FLOOR_ALT) return true;
 		return false;
 	}
+
+	bool isFloor(const Tile& tile)
+	{
+		return ((tile.type == (int)TILE::FLOOR) || (tile.type == (int)TILE::FLOOR_ALT));
+	}
 	void addItem(Entity* e) {
 		m_items.push_back(e);
 	}
+
+	void resetNodes();
+	Tile* m_playerPreviousTile;
 
 	// Plays the given sound effect, with randomized parameters.
 	void playSound(std::string& sound, Vector2D position);
