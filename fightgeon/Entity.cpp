@@ -324,6 +324,16 @@ void Enemy::update()
 			m_position.m_y += m_velocity.m_y;
 		}
 	}
+	else
+	{
+		//if player is < 300 pixels near then update the path
+		Tile* playerPos = Game::Instance()->m_playerPreviousTile;
+		if (playerPos != nullptr && sqrt((m_position.m_x - playerPos->columnIndex * 50) * (m_position.m_x - playerPos->columnIndex * 50) +
+			(m_position.m_y - playerPos->rowIndex * 50) * (m_position.m_y - playerPos->rowIndex * 50)) < 300.0f)
+		{
+			updatePathFinding();
+		}
+	}
 }
 
 void Enemy::draw()

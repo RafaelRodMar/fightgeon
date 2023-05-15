@@ -267,12 +267,12 @@ void Game::render()
 		p->draw();
 
 		//draw all enemy paths
-		for (auto& j : m_enemies)
+		/*for (auto& j : m_enemies)
 		{
 			for (int i = 0; i < j->m_targetPositions.size(); i++) {
 				AssetsManager::Instance()->draw("path", j->m_targetPositions[i].m_x * 50, j->m_targetPositions[i].m_y * 50, 50, 50, Game::Instance()->getRenderer(), SDL_FLIP_NONE);
 			}
-		}
+		}*/
 
 		//ui
 		int sw = Game::Instance()->m_gameWidth;
