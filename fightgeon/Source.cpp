@@ -266,9 +266,12 @@ void Game::render()
 
 		p->draw();
 
-		//draw path
-		for (int i = 0; i < m_enemies[0]->m_targetPositions.size(); i++) {
-			AssetsManager::Instance()->draw("path", m_enemies[0]->m_targetPositions[i].m_x * 50, m_enemies[0]->m_targetPositions[i].m_y * 50, 50, 50, Game::Instance()->getRenderer(), SDL_FLIP_NONE);
+		//draw all enemy paths
+		for (auto& j : m_enemies)
+		{
+			for (int i = 0; i < j->m_targetPositions.size(); i++) {
+				AssetsManager::Instance()->draw("path", j->m_targetPositions[i].m_x * 50, j->m_targetPositions[i].m_y * 50, 50, 50, Game::Instance()->getRenderer(), SDL_FLIP_NONE);
+			}
 		}
 
 		//ui
@@ -589,7 +592,7 @@ void Game::update()
 			//store the new tile
 			m_playerPreviousTile = playerCurrentTile;
 
-			//update path finding for all enmies if within range of the player
+			//update path finding for all enemies if within range of the player
 			for (const auto& enemy : m_enemies) {
 				if (sqrt((enemy->m_position.m_x - p->m_position.m_x) * (enemy->m_position.m_x - p->m_position.m_x) +
 					(enemy->m_position.m_y - p->m_position.m_y) * (enemy->m_position.m_y - p->m_position.m_y)) < 300.0f)
@@ -675,7 +678,7 @@ void Game::populateLevel()
 	}
 
 	//add some enemies
-	for (int i = 0; i < 1; i++)
+	for (int i = 0; i < 5; i++)
 	{
 		spawnEnemy(static_cast<ENEMY>(rnd.getRndInt(0, static_cast<int>(ENEMY::COUNT) - 1)));
 	}
