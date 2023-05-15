@@ -307,8 +307,8 @@ void Enemy::update()
 	//move towards current target location.
 	if (!m_targetPositions.empty())
 	{
-		Vector2D targetLocation = m_targetPositions.front();
-		m_velocity = Vector2D(targetLocation.m_x - m_position.m_x, targetLocation.m_y + m_position.m_y);
+		Vector2D targetLocation = m_targetPositions.front() * 50;
+		m_velocity = Vector2D(targetLocation.m_x - m_position.m_x, targetLocation.m_y - m_position.m_y);
 
 		if (abs(m_velocity.m_x) < 10.f && abs(m_velocity.m_y) < 10.f)
 		{
@@ -320,7 +320,7 @@ void Enemy::update()
 			m_velocity.m_x /= length;
 			m_velocity.m_y /= length;
 
-			m_position.m_x += m_velocity.m_x;
+			m_position.m_x += m_velocity.m_x; // * m_speed = rand() % 51 + 150;
 			m_position.m_y += m_velocity.m_y;
 		}
 	}
@@ -499,6 +499,12 @@ void Enemy::updatePathFinding()
 
 	//reverse the path (it is stored from destination to start and need to be reversed)
 	std::reverse(m_targetPositions.begin(), m_targetPositions.end());
+
+	/*std::cout << "final path : " << std::endl;
+	for (int i = 0; i < m_targetPositions.size(); i++) {
+		std::cout << m_targetPositions[i].m_x << "," << m_targetPositions[i].m_y << " - ";
+	}
+	std::cout << std::endl;*/
 }
 
 void Slime::draw()

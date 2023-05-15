@@ -136,7 +136,8 @@
 	"torso_idle_front" : "armor/torso/spr_torso_idle_front.png",
 	"torso_idle_side" : "armor/torso/spr_torso_idle_side.png",
 	"torso_walk_front" : "armor/torso/spr_torso_walk_front.png",
-	"torso_walk_side" : "armor/torso/spr_torso_walk_side.png"
+	"torso_walk_side" : "armor/torso/spr_torso_walk_side.png",
+	"path" : "spr_path.png"
     },
     "mus": {
         "music1": "msc_main_track_1.wav",
