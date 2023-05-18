@@ -302,6 +302,7 @@ void player::draw()
 
 void Enemy::update()
 {
+	char newDirection = '0';
 	m_currentFrame = int(((SDL_GetTicks() / (100)) % m_numFrames));
 
 	//move towards current target location.
@@ -322,6 +323,11 @@ void Enemy::update()
 
 			m_position.m_x += m_velocity.m_x; // * m_speed = rand() % 51 + 150;
 			m_position.m_y += m_velocity.m_y;
+
+			if (m_velocity.m_x == 0 && m_velocity.m_y >= 0) newDirection = 'D';
+			if (m_velocity.m_x == 0 && m_velocity.m_y < 0) newDirection = 'U';
+			if (m_velocity.m_x >= 0) newDirection = 'R';
+			if (m_velocity.m_x < 0) newDirection = 'L';
 		}
 	}
 	else
@@ -333,6 +339,28 @@ void Enemy::update()
 		{
 			updatePathFinding();
 		}
+	}
+
+	m_textureID = type; //archer, thief, warrior or mage
+	if (newDirection == '0')
+	{
+		//if no key pressed
+		if (m_direction == 'U') m_textureID += "_idle_up";
+		if (m_direction == 'D') m_textureID += "_idle_down";
+		if (m_direction == 'L') m_textureID += "_idle_left";
+		if (m_direction == 'R') m_textureID += "_idle_right";
+		m_width = 33; m_height = 33; m_numFrames = 1; m_currentRow = 0; m_currentFrame = 0;
+		if (type == "slime") m_height = 18;
+	}
+	else
+	{
+		if (newDirection == 'U') m_textureID += "_walk_up";
+		if (newDirection == 'D') m_textureID += "_walk_down";
+		if (newDirection == 'L') m_textureID += "_walk_left";
+		if (newDirection == 'R') m_textureID += "_walk_right";
+		m_width = 264 / 8; m_height = 33; m_numFrames = 8; m_currentRow = 0; m_currentFrame = 0;
+		if (type == "slime") m_height = 18;
+		m_direction = newDirection;
 	}
 }
 
