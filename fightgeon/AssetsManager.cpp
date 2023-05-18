@@ -200,6 +200,18 @@ void AssetsManager::playMusic(std::string id, int loop)
 	Mix_PlayMusic(m_music[id], loop);
 }
 
+void AssetsManager::stopMusic()
+{
+	Mix_HaltMusic();
+}
+
+void AssetsManager::stopAllSounds()
+{
+	Mix_Pause(-1); //pause all sounds
+	int Mix_HaltChannel(-1); //stop all sounds but not the ones acutally playing.
+							 //That's why the need for pausing all them first.
+}
+
 void AssetsManager::playSound(std::string id, int loop)
 {
 	Mix_PlayChannel(-1, m_sfxs[id], loop);

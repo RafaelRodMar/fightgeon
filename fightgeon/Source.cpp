@@ -139,52 +139,6 @@ bool Game::init(const char* title, int xpos, int ypos, int width,
 		std::cout << "Error loading level data" << std::endl;
 	}*/
 
-	//no change, red, green, yellow, magenta, cyan
-	SDL_Color colorList[6] = { {255,255,255}, {255,0,0}, {0,255,0}, {255,253,1}, {236,5,229}, {0,255,255} };
-	colorMod = colorList[rnd.getRndInt(0, 5)];
-	//modify the color of the tiles
-	for (int i = 0; i < 22; i++) {
-		AssetsManager::Instance()->applyColorMod(numToTile[i], colorMod.r, colorMod.g, colorMod.b);
-	}
-
-	//now there is a map loaded from a file. Let´s create a randomized map
-
-	//first create a grid of nodes (all walls, the nodes are empty)
-	//the nodes are the ones with row and col are odd
-	for (int i = 0; i < 19; i++) {
-		for (int j = 0; j < 19; j++) {
-			if ((i % 2 != 0) && (j % 2 != 0))
-			{
-				level[i][j].type = (int)TILE::EMPTY; //empty cell
-			}
-			else
-			{
-				level[i][j].type = (int)TILE::WALL_TOP; //wall_top
-			}
-			level[i][j].rowIndex = i;
-			level[i][j].columnIndex = j;
-		}
-	}
-
-	//now carve passages between nodes.
-	//1- choose a random direction and make a connection to the adjacent node if it
-	//has not yet been visited. This node becomes the current node.
-	//2- if all adjacent cells in each direction have already been visited, go back to 
-	//the last cell.
-	//3- if you're back at the start node, the algorithm is complete.
-	createPath(1, 1);
-
-	//add some rooms to the level to create some open space.
-	createRooms(10);
-
-	//give each tile the correct texture
-	calculateTextures();
-
-	populateLevel();
-
-	//create player
-	p = new player();
-
 	//menu init
 	button0 = { 0,0,100,100 };
 	r0 = 0; g0 = 0; b0 = 255; a0 = 255;
@@ -201,8 +155,6 @@ bool Game::init(const char* title, int xpos, int ypos, int width,
 
 	//set a random music
 	Mix_Volume(-1, MIX_MAX_VOLUME);
-	int musNum = rand() % 4 + 1; //numbers 1,2,3,4
-	AssetsManager::Instance()->playMusic("music" + std::to_string(musNum), -1);
 
 	state = MENU;
 
@@ -376,7 +328,72 @@ void Game::handleEvents()
 			if (mousePos->m_x > button2.x && mousePos->m_x < button2.x + button2.w &&
 				mousePos->m_y > button2.y && mousePos->m_y < button2.y + button2.h)
 			{
+				//reset
+				for (auto& i : m_items) {
+					delete i;
+				}
+				m_items.clear();
+
+				for (auto& i : m_enemies) {
+					delete i;
+				}
+				m_enemies.clear();
+
+				//create player
+				if (p != nullptr) delete p;
+				p = new player();
 				p->configure();
+
+				//create map
+				//no change, red, green, yellow, magenta, cyan
+				SDL_Color colorList[6] = { {255,255,255}, {255,0,0}, {0,255,0}, {255,253,1}, {236,5,229}, {0,255,255} };
+				colorMod = colorList[rnd.getRndInt(0, 5)];
+				//modify the color of the tiles
+				for (int i = 0; i < 22; i++) {
+					AssetsManager::Instance()->applyColorMod(numToTile[i], colorMod.r, colorMod.g, colorMod.b);
+				}
+
+				//first create a grid of nodes (all walls, the nodes are empty)
+				//the nodes are the ones with row and col are odd
+				for (int i = 0; i < 19; i++) {
+					for (int j = 0; j < 19; j++) {
+						if ((i % 2 != 0) && (j % 2 != 0))
+						{
+							level[i][j].type = (int)TILE::EMPTY; //empty cell
+						}
+						else
+						{
+							level[i][j].type = (int)TILE::WALL_TOP; //wall_top
+						}
+						level[i][j].rowIndex = i;
+						level[i][j].columnIndex = j;
+					}
+				}
+
+				//now carve passages between nodes.
+				//1- choose a random direction and make a connection to the adjacent node if it
+				//has not yet been visited. This node becomes the current node.
+				//2- if all adjacent cells in each direction have already been visited, go back to 
+				//the last cell.
+				//3- if you're back at the start node, the algorithm is complete.
+				createPath(1, 1);
+
+				//add some rooms to the level to create some open space.
+				createRooms(10);
+
+				//give each tile the correct texture
+				calculateTextures();
+
+				populateLevel();
+
+				//select and play music
+				int musNum = rand() % 4 + 1; //numbers 1,2,3,4
+				AssetsManager::Instance()->playMusic("music" + std::to_string(musNum), -1);
+
+				gemScore = 0;
+				goldScore = 0;
+				hasKey = false;
+
 				state = GAME;
 			}
 
@@ -399,7 +416,12 @@ void Game::handleEvents()
 	if (state == GAME)
 	{
 		p->handleEvents();
-		if (InputHandler::Instance()->isKeyDown(SDL_SCANCODE_ESCAPE)) state = MENU;
+		if (InputHandler::Instance()->isKeyDown(SDL_SCANCODE_ESCAPE))
+		{
+			AssetsManager::Instance()->stopMusic();
+			AssetsManager::Instance()->stopAllSounds();
+			state = MENU;
+		}
 	}
 
 	if (state == ENDGAME)
@@ -1008,11 +1030,6 @@ void Game::resetNodes()
 			level[i][j].F = 0;
 		}
 	}
-}
-
-void Game::playSound(std::string & sound, Vector2D position)
-{
-	AssetsManager::Instance()->playSound(sound, 0);
 }
 
 void Game::UpdateHiScores(int newscore)

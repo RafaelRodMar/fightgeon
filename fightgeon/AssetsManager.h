@@ -70,6 +70,8 @@ public:
 	bool loadSound(std::string fileName, std::string id, sound_type type);
 	void playSound(std::string id, int loop);
 	void playMusic(std::string id, int loop);
+	void stopMusic();
+	void stopAllSounds();
 	Mix_Chunk* getSound(std::string id) { return m_sfxs[id]; }
 
 	void clearMusicAndSounds() {
