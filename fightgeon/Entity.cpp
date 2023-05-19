@@ -323,12 +323,18 @@ void Enemy::update()
 
 			m_position.m_x += m_velocity.m_x; // * m_speed = rand() % 51 + 150;
 			m_position.m_y += m_velocity.m_y;
-
-			if (m_velocity.m_x == 0 && m_velocity.m_y >= 0) newDirection = 'D';
-			if (m_velocity.m_x == 0 && m_velocity.m_y < 0) newDirection = 'U';
-			if (m_velocity.m_x >= 0) newDirection = 'R';
-			if (m_velocity.m_x < 0) newDirection = 'L';
 		}
+
+		/*if (m_velocity.m_x == 0 && m_velocity.m_y > 0) newDirection = 'D';
+		if (m_velocity.m_x == 0 && m_velocity.m_y < 0) newDirection = 'U';
+		if (m_velocity.m_x > 0) newDirection = 'R';
+		if (m_velocity.m_x < 0) newDirection = 'L';*/
+
+		if (abs(m_velocity.m_x) > abs(m_velocity.m_y) && m_velocity.m_x > 0) newDirection = 'R';
+		if (abs(m_velocity.m_x) > abs(m_velocity.m_y) && m_velocity.m_x < 0) newDirection = 'L';
+		if (abs(m_velocity.m_x) <= abs(m_velocity.m_y) && m_velocity.m_y >= 0) newDirection = 'D';
+		if (abs(m_velocity.m_x) <= abs(m_velocity.m_y) && m_velocity.m_y < 0) newDirection = 'U';
+
 	}
 	else
 	{
@@ -339,6 +345,8 @@ void Enemy::update()
 		{
 			updatePathFinding();
 		}
+		newDirection = '0';
+		m_direction = 'D';
 	}
 
 	m_textureID = type; //archer, thief, warrior or mage
@@ -358,7 +366,7 @@ void Enemy::update()
 		if (newDirection == 'D') m_textureID += "_walk_down";
 		if (newDirection == 'L') m_textureID += "_walk_left";
 		if (newDirection == 'R') m_textureID += "_walk_right";
-		m_width = 264 / 8; m_height = 33; m_numFrames = 8; m_currentRow = 0; m_currentFrame = 0;
+		m_width = 264 / 8; m_height = 33; m_numFrames = 8;/* m_currentRow = 0; m_currentFrame = 0;*/
 		if (type == "slime") m_height = 18;
 		m_direction = newDirection;
 	}
