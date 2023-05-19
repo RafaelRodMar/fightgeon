@@ -245,8 +245,8 @@ void player::handleEvents()
 		if (projectileID == "sword") { w = 24; h = 21; }
 
 		//get the angle with the mouse in radians
-		double dx = mousePos->m_x - m_position.m_x;
-		double dy = mousePos->m_y - m_position.m_y;
+		double dx = mousePos->m_x - 16 - m_position.m_x; //point to the upper left corner of the cursor.
+		double dy = mousePos->m_y - 16 - m_position.m_y; //not to the center of it.
 		double radians = std::atan2(dy, dx);
 		//convert the angle to degrees
 		double degrees = radians * 180.0 / 3.14159265359;
