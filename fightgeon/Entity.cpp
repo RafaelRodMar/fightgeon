@@ -309,20 +309,49 @@ void Enemy::update()
 	if (!m_targetPositions.empty())
 	{
 		Vector2D targetLocation = m_targetPositions.front() * 50;
+		targetLocation += Vector2D(2, 2); //avoid getting stuck in corners.
 		m_velocity = Vector2D(targetLocation.m_x - m_position.m_x, targetLocation.m_y - m_position.m_y);
 
-		if (abs(m_velocity.m_x) < 10.f && abs(m_velocity.m_y) < 10.f)
+		if (abs(m_velocity.m_x) < 5.f && abs(m_velocity.m_y) < 5.f)
 		{
 			m_targetPositions.erase(m_targetPositions.begin());
 		}
 		else
 		{
+			int tw = Game::Instance()->getTileWidth();
+			int th = Game::Instance()->getTileHeight();
+
 			float length = sqrt(m_velocity.m_x * m_velocity.m_x + m_velocity.m_y * m_velocity.m_y);
 			m_velocity.m_x /= length;
 			m_velocity.m_y /= length;
 
-			m_position.m_x += m_velocity.m_x; // * m_speed = rand() % 51 + 150;
+			m_position.m_x += m_velocity.m_x;
+
+			//check collisions
+			bool check = false;
+			Vector2D v = Vector2D(m_position.m_y / th, m_position.m_x / tw);
+			if (!Game::Instance()->isFloor(v)) check = true; //relocate the character.
+			v = Vector2D(m_position.m_y / th, (m_position.m_x + m_width) / tw);
+			if (!Game::Instance()->isFloor(v)) check = true; //relocate the character.
+			v = Vector2D((m_position.m_y + m_height) / th, m_position.m_x / tw);
+			if (!Game::Instance()->isFloor(v)) check = true; //relocate the character.
+			v = Vector2D((m_position.m_y + m_height) / th, (m_position.m_x + m_width) / tw);
+			if (!Game::Instance()->isFloor(v)) check = true; //relocate the character.
+			if (check == true) m_position.m_x -= m_velocity.m_x;
+
 			m_position.m_y += m_velocity.m_y;
+
+			//check collisions
+			check = false;
+			v = Vector2D(m_position.m_y / th, m_position.m_x / tw);
+			if (!Game::Instance()->isFloor(v)) check = true; //relocate the character.
+			v = Vector2D((m_position.m_y + m_height) / th, m_position.m_x / tw);
+			if (!Game::Instance()->isFloor(v)) check = true; //relocate the character.
+			v = Vector2D(m_position.m_y / th, (m_position.m_x + m_width) / tw);
+			if (!Game::Instance()->isFloor(v)) check = true; //relocate the character.
+			v = Vector2D((m_position.m_y + m_height) / th, (m_position.m_x + m_width) / tw);
+			if (!Game::Instance()->isFloor(v)) check = true; //relocate the character.
+			if (check == true) m_position.m_y -= m_velocity.m_y;
 		}
 
 		/*if (m_velocity.m_x == 0 && m_velocity.m_y > 0) newDirection = 'D';
@@ -333,7 +362,7 @@ void Enemy::update()
 		if (abs(m_velocity.m_x) > abs(m_velocity.m_y) && m_velocity.m_x > 0) newDirection = 'R';
 		if (abs(m_velocity.m_x) > abs(m_velocity.m_y) && m_velocity.m_x < 0) newDirection = 'L';
 		if (abs(m_velocity.m_x) <= abs(m_velocity.m_y) && m_velocity.m_y >= 0) newDirection = 'D';
-		if (abs(m_velocity.m_x) <= abs(m_velocity.m_y) && m_velocity.m_y < 0) newDirection = 'U';
+		if (abs(m_velocity.m_x) < abs(m_velocity.m_y) && m_velocity.m_y < 0) newDirection = 'U';
 
 	}
 	else
