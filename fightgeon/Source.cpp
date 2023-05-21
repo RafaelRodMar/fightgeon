@@ -569,6 +569,18 @@ void Game::update()
 					i->m_life = false;
 				}
 			}
+
+			if (i->m_name == "bullet")
+			{
+				for (auto& j : m_enemies) {
+					if (isCollideRect(j, i))
+					{
+						i->m_life = false;
+						j->m_life = false;
+						AssetsManager::Instance()->playSound("enemy_dead", 0);
+					}
+				}
+			}
 		}
 
 		//remove objects if needed
@@ -577,6 +589,15 @@ void Game::update()
 			Entity *e = *i;
 
 			if (e->m_life == false) { i = m_items.erase(i); delete e; }
+			else i++;
+		}
+
+		//remove enemies if needed
+		for (auto i = m_enemies.begin(); i != m_enemies.end();)
+		{
+			Entity *e = *i;
+
+			if (e->m_life == false) { i = m_enemies.erase(i); delete e; }
 			else i++;
 		}
 
