@@ -496,6 +496,11 @@ void Game::update()
 					AssetsManager::Instance()->playSound("coin_pickup", 0);
 					//mark the object for being destroyed later
 					i->m_life = false;
+					//check if we have an active level goal
+					if (m_activeGoal)
+					{
+						m_goldGoal -= goldValue;
+					}
 				}
 			}
 
@@ -511,6 +516,11 @@ void Game::update()
 					AssetsManager::Instance()->playSound("gem_pickup", 0);
 					//mark the object for being destroyed later
 					i->m_life = false;
+					//check if we have an active level goal
+					if (m_activeGoal)
+					{
+						--m_gemGoal;
+					}
 				}
 			}
 
@@ -578,6 +588,12 @@ void Game::update()
 						i->m_life = false;
 						j->m_life = false;
 						AssetsManager::Instance()->playSound("enemy_dead", 0);
+
+						//if we have an active goal decrement killGoal
+						if (m_activeGoal)
+						{
+							--m_killGoal;
+						}
 					}
 				}
 			}
@@ -646,6 +662,15 @@ void Game::update()
 		}
 	}
 
+	//check if we have completed an active goal
+	if (m_activeGoal)
+	{
+		if ((m_gemGoal <= 0) && (m_goldGoal <= 0) && (m_killGoal <= 0))
+		{
+			score += std::rand() % 1001 + 1000;
+			m_activeGoal = false;
+		}
+	}
 }
 
 void Game::populateLevel()
@@ -1097,6 +1122,42 @@ void Game::WriteHiScores()
 		out << vhiscores[i] << " ";
 	}
 	out.close();
+}
+
+void Game::generateLevelGoals()
+{
+	std::ostringstream ss;
+
+	//reset our goal variables.
+	m_killGoal = 0;
+	m_goldGoal = 0;
+	m_gemGoal = 0;
+
+	//choose which type of goal is to be generated.
+	int goalType = rand() % 3;
+
+	switch (goalType) {
+	case 0:  //kill x enemies
+		m_killGoal = rand() % 6 + 5;
+		//string describing the goal
+		ss << "Current Goal: Kill " << m_killGoal << " enemies!" << std::endl;
+		break;
+	case 1:  //collect X gold
+		m_goldGoal = rand() % 51 + 50;
+		ss << "Current Goal: Collect " << m_goldGoal << " gold!" << std::endl;
+		break;
+	case 2:  //collect X gems
+		m_gemGoal = rand() % 6 + 5;
+		ss << "Current Goal: Collect " << m_gemGoal << " gems!" << std::endl;
+		break;
+	default:
+		break;
+	}
+
+	//store the goal string
+	m_goalString = ss.str();
+	//set the goal as active
+	m_activeGoal = true;
 }
 
 const int FPS = 60;

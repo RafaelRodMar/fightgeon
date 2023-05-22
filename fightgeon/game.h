@@ -190,6 +190,8 @@ public:
 	void ReadHiScores();
 	void WriteHiScores();
 
+	void generateLevelGoals();
+
 private:
 	Game();
 	static Game* s_pInstance;
@@ -238,6 +240,12 @@ private:
 						 "wall_bottom_t", "wall_top_right", "wall_side_right_t", "wall_top_t", "wall_intersection",
 						 "door_locked", "door_unlocked", "wall_entrance", "floor", "floor_alt", "empty" };
 
+	//level goals
+	int m_goldGoal;
+	int m_gemGoal;
+	int m_killGoal;
+	std::string m_goalString;
+	bool m_activeGoal;
 
 	bool isCollide(Entity *a, Entity *b);
 	bool isCollideRect(Entity *a, Entity *b);
