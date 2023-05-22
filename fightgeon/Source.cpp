@@ -263,6 +263,11 @@ void Game::render()
 		AssetsManager::Instance()->Text(std::to_string(p->m_dexterity), "fontad", scw + 150, sh - 35, { 255,255,255,255 }, m_pRenderer);
 		AssetsManager::Instance()->draw("stamina_ui", scw + 210, sh - 40, 35, 35, m_pRenderer, SDL_FLIP_NONE);
 		AssetsManager::Instance()->Text(std::to_string(p->m_stamina), "fontad", scw + 270, sh - 35, { 255,255,255,255 }, m_pRenderer);
+		// Draw the level goal if active.
+		if (m_activeGoal)
+		{
+			AssetsManager::Instance()->Text(m_goalString, "fontad", scw / 2, sh - 75, { 255,255,255,255 }, m_pRenderer);
+		}
 	}
 
 	if (state == ENDGAME)
@@ -393,6 +398,8 @@ void Game::handleEvents()
 				gemScore = 0;
 				goldScore = 0;
 				hasKey = false;
+
+				generateLevelGoals();
 
 				state = GAME;
 			}
@@ -669,6 +676,19 @@ void Game::update()
 		{
 			score += std::rand() % 1001 + 1000;
 			m_activeGoal = false;
+		}
+		else
+		{
+			std::ostringstream ss;
+
+			if (m_goldGoal > 0)
+				ss << "Current Goal: Collect " << m_goldGoal << " gold";
+			else if (m_gemGoal > 0)
+				ss << "Current Goal: Collect " << m_gemGoal << " gem";
+			else if (m_killGoal > 0)
+				ss << "Current Goal: Kill " << m_killGoal << " enemies";
+
+			m_goalString = ss.str();
 		}
 	}
 }
@@ -1140,15 +1160,15 @@ void Game::generateLevelGoals()
 	case 0:  //kill x enemies
 		m_killGoal = rand() % 6 + 5;
 		//string describing the goal
-		ss << "Current Goal: Kill " << m_killGoal << " enemies!" << std::endl;
+		ss << "Current Goal: Kill " << m_killGoal << " enemies!";
 		break;
 	case 1:  //collect X gold
 		m_goldGoal = rand() % 51 + 50;
-		ss << "Current Goal: Collect " << m_goldGoal << " gold!" << std::endl;
+		ss << "Current Goal: Collect " << m_goldGoal << " gold!";
 		break;
 	case 2:  //collect X gems
 		m_gemGoal = rand() % 6 + 5;
-		ss << "Current Goal: Collect " << m_gemGoal << " gems!" << std::endl;
+		ss << "Current Goal: Collect " << m_gemGoal << " gems!";
 		break;
 	default:
 		break;
