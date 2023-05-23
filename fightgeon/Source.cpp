@@ -266,7 +266,7 @@ void Game::render()
 		// Draw the level goal if active.
 		if (m_activeGoal)
 		{
-			AssetsManager::Instance()->Text(m_goalString, "fontad", scw / 2, sh - 75, { 255,255,255,255 }, m_pRenderer);
+			AssetsManager::Instance()->Text(m_goalString, "fontad", scw / 2, sh - 75, { 255,255,255,125 }, m_pRenderer);
 		}
 
 	}
@@ -391,6 +391,7 @@ void Game::handleEvents()
 				calculateTextures();
 
 				//set the entry and exit point
+				//entry
 				vector<int> entries;
 				for (int i = 1; i < (m_gameWidth / m_tileWidth) - 1; i++) {
 					//std::cout << (m_gameHeight / m_tileHeight) - 2 << "," << i << " = " << isFloor(level[(m_gameHeight/m_tileHeight) - 2][i]) << " - " << level[(m_gameHeight / m_tileHeight) - 2][i].type << std::endl;
@@ -408,6 +409,23 @@ void Game::handleEvents()
 					//set the player there
 					p->m_position.m_x = m_mapEntry.m_x * 50;
 					p->m_position.m_y = 50 * ((m_gameHeight / m_tileHeight) - 2);
+				}
+
+				//exit
+				vector<int> exits;
+				for (int i = 1; i < (m_gameWidth / m_tileWidth) - 1; i++) {
+					if (isFloor(level[1][i]))
+					{
+						exits.push_back(i);
+					}
+				}
+				if (!exits.empty())
+				{
+					//set the exit door
+					m_mapExit.m_x = exits[std::rand() % exits.size()];
+					m_mapExit.m_y = 0;
+					level[(int)m_mapExit.m_y][(int)m_mapExit.m_x].type = (int)TILE::WALL_DOOR_LOCKED;
+					std::cout << "mapexit = " << to_string(m_mapExit.m_y) << "," << to_string(m_mapExit.m_x) << std::endl;
 				}
 
 				populateLevel();
@@ -688,28 +706,38 @@ void Game::update()
 				}
 			}
 		}
-	}
 
-	//check if we have completed an active goal
-	if (m_activeGoal)
-	{
-		if ((m_gemGoal <= 0) && (m_goldGoal <= 0) && (m_killGoal <= 0))
+		//check if we reached the closed door
+		Vector2D ppos;
+		ppos.m_x = p->m_position.m_x / m_tileSize;
+		ppos.m_y = p->m_position.m_y / m_tileSize;
+		if ((int)ppos.m_x == (int)m_mapExit.m_x && (int)ppos.m_y == (int)(m_mapExit.m_y + 1) && hasKey)
 		{
-			score += std::rand() % 1001 + 1000;
-			m_activeGoal = false;
+			level[(int)m_mapExit.m_y][(int)m_mapExit.m_x].type = (int)TILE::WALL_DOOR_UNLOCKED;
+			hasKey = false;
 		}
-		else
+
+		//check if we have completed an active goal
+		if (m_activeGoal)
 		{
-			std::ostringstream ss;
+			if ((m_gemGoal <= 0) && (m_goldGoal <= 0) && (m_killGoal <= 0))
+			{
+				score += std::rand() % 1001 + 1000;
+				m_activeGoal = false;
+			}
+			else
+			{
+				std::ostringstream ss;
 
-			if (m_goldGoal > 0)
-				ss << "Current Goal: Collect " << m_goldGoal << " gold";
-			else if (m_gemGoal > 0)
-				ss << "Current Goal: Collect " << m_gemGoal << " gem";
-			else if (m_killGoal > 0)
-				ss << "Current Goal: Kill " << m_killGoal << " enemies";
+				if (m_goldGoal > 0)
+					ss << "Current Goal: Collect " << m_goldGoal << " gold";
+				else if (m_gemGoal > 0)
+					ss << "Current Goal: Collect " << m_gemGoal << " gem";
+				else if (m_killGoal > 0)
+					ss << "Current Goal: Kill " << m_killGoal << " enemies";
 
-			m_goalString = ss.str();
+				m_goalString = ss.str();
+			}
 		}
 	}
 }
