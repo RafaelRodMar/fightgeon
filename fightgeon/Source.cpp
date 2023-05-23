@@ -401,9 +401,13 @@ void Game::handleEvents()
 				}
 				if (!entries.empty())
 				{
+					//set the entrance door
 					m_mapEntry.m_x = entries[std::rand() % entries.size()];
 					m_mapEntry.m_y = (m_gameHeight / m_tileHeight) - 1;
 					level[(int)m_mapEntry.m_y][(int)m_mapEntry.m_x].type = (int)TILE::WALL_ENTRANCE;
+					//set the player there
+					p->m_position.m_x = m_mapEntry.m_x * 50;
+					p->m_position.m_y = 50 * ((m_gameHeight / m_tileHeight) - 2);
 				}
 
 				populateLevel();
