@@ -425,7 +425,7 @@ void Game::handleEvents()
 					m_mapExit.m_x = exits[std::rand() % exits.size()];
 					m_mapExit.m_y = 0;
 					level[(int)m_mapExit.m_y][(int)m_mapExit.m_x].type = (int)TILE::WALL_DOOR_LOCKED;
-					std::cout << "mapexit = " << to_string(m_mapExit.m_y) << "," << to_string(m_mapExit.m_x) << std::endl;
+					//std::cout << "mapexit = " << to_string(m_mapExit.m_y) << "," << to_string(m_mapExit.m_x) << std::endl;
 				}
 
 				populateLevel();
