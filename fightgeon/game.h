@@ -222,6 +222,8 @@ private:
 	//map
 	SDL_Color colorMod;
 	Tile level[19][19];
+	Vector2D m_mapEntry;
+	Vector2D m_mapExit;
 	void populateLevel();
 	int m_tileSize = 50;
 	int m_tileWidth = 50;

@@ -267,7 +267,8 @@ void Game::render()
 		if (m_activeGoal)
 		{
 			AssetsManager::Instance()->Text(m_goalString, "fontad", scw / 2, sh - 75, { 255,255,255,255 }, m_pRenderer);
-		}
+		}
+
 	}
 
 	if (state == ENDGAME)
@@ -388,6 +389,22 @@ void Game::handleEvents()
 
 				//give each tile the correct texture
 				calculateTextures();
+
+				//set the entry and exit point
+				vector<int> entries;
+				for (int i = 1; i < (m_gameWidth / m_tileWidth) - 1; i++) {
+					//std::cout << (m_gameHeight / m_tileHeight) - 2 << "," << i << " = " << isFloor(level[(m_gameHeight/m_tileHeight) - 2][i]) << " - " << level[(m_gameHeight / m_tileHeight) - 2][i].type << std::endl;
+					if (isFloor(level[(m_gameHeight / m_tileHeight) - 2][i]))
+					{
+						entries.push_back(i);
+					}
+				}
+				if (!entries.empty())
+				{
+					m_mapEntry.m_x = entries[std::rand() % entries.size()];
+					m_mapEntry.m_y = (m_gameHeight / m_tileHeight) - 1;
+					level[(int)m_mapEntry.m_y][(int)m_mapEntry.m_x].type = (int)TILE::WALL_ENTRANCE;
+				}
 
 				populateLevel();
 
